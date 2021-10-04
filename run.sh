@@ -1,1 +1,1 @@
-tsc && node ./dist/index.js
+tsc --build --clean && tsc && node ./dist/index.js
