@@ -1,5 +1,10 @@
 import { AudioResource } from '@discordjs/voice';
 
+interface QueueItem {
+    audio: AudioResource;
+    duration: number;
+}
+
 class Queue {
     private _store: AudioResource[] = [];
     push(val: AudioResource) {
@@ -13,5 +18,4 @@ class Queue {
     }
 }
 
-const queue = new Queue();
-export { queue };
+export const queue = new Queue();

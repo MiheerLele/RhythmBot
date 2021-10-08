@@ -1,6 +1,5 @@
 import { Message } from "discord.js";
 import { Command } from "./interfaces/Command";
-import { queue } from "../queue/Queue";
 import { play } from "./play";
 
 class Skip implements Command {
