@@ -11,7 +11,11 @@ class Queue implements Command {
 
     execute(message: Message, args: string[]) {
         const embeds: MessageEmbed[] = songs.list();
-        message.channel.send({ embeds: embeds });
+        embeds.length > 0 ? 
+            message.channel.send({ embeds: embeds }) : 
+            message.channel.send("Nothing in the queue, use !play");
+
+
     }
 }
 

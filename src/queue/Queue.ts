@@ -23,13 +23,16 @@ class Queue {
     }
 
     public list(): MessageEmbed[] {
+        let songsCopy = [...this._store].reverse();
+        const maxEmbedPerMessage = 10;
         let embeds: MessageEmbed[] = [];
-        this._store.forEach((val) => {
+        for (let i = 0; i < Math.min(maxEmbedPerMessage, this._store.length); i++) {
+            const val = songsCopy[i];
             const embed = new MessageEmbed()
                 .setTitle(val.metadata.title)
                 .setThumbnail(val.metadata.thumbnail)
             embeds.push(embed);
-        })
+        }
         return embeds;
     }
 }

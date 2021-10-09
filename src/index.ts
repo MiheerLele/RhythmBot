@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import { commands } from './commands/index';
 
 dotenv.config();
+global.AbortController = require("node-abort-controller").AbortController;
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES]});
 const prefix = '!';
 

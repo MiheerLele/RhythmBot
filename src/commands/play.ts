@@ -75,7 +75,7 @@ class Play implements Command {
     private setupChild(): ChildProcess {
         const child: ChildProcess = fork("./dist/commands/children/play.js");
         child.on('message', (video: VideoSearchResult) => {
-            console.log('Message from child', video);
+            console.log('Message from child', video.title);
             if (video && this.subscription) {
                 this.addToQueue(video);
                 this.sendMessage(video.title, video.thumbnail);

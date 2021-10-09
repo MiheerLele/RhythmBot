@@ -1,0 +1,8 @@
+To do related songs you could:
+    Keep track of all the authors being requested
+    Run a search on one of those and return a random top song from the list
+
+Authors [21 Savage, Trippie Redd, J Cole]
+On queue empty
+    search for authors[random_index]
+    return videos[random_song]
