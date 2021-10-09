@@ -1,20 +1,36 @@
 import { AudioResource } from '@discordjs/voice';
-
-interface QueueItem {
-    audio: AudioResource;
-    duration: number;
-}
+import { MessageEmbed } from 'discord.js';
+import yts from 'yt-search';
 
 class Queue {
-    private _store: AudioResource[] = [];
-    push(val: AudioResource) {
+    private _store: AudioResource<yts.VideoSearchResult>[] = [];
+
+    public push(val: AudioResource<yts.VideoSearchResult>) {
         this._store.push(val);
     }
-    pop(): AudioResource | undefined{
+
+    public pop(): AudioResource<yts.VideoSearchResult> | undefined{
         return this._store.shift();
     }
-    size(): number {
+
+    public size(): number {
         return this._store.length;
+    }
+
+    public duration(): number {
+        console.log(this._store[0]);
+        return this._store.reduce((sum, resource) => sum + resource.metadata.seconds, 0);
+    }
+
+    public list(): MessageEmbed[] {
+        let embeds: MessageEmbed[] = [];
+        this._store.forEach((val) => {
+            const embed = new MessageEmbed()
+                .setTitle(val.metadata.title)
+                .setThumbnail(val.metadata.thumbnail)
+            embeds.push(embed);
+        })
+        return embeds;
     }
 }
 

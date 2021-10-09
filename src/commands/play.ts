@@ -48,8 +48,8 @@ class Play implements Command {
     }
 
     private addToQueue(video: yts.VideoSearchResult): void {
-        const stream = ytdl(video.url, {filter: 'audioonly'})
-        queue.push(createAudioResource(stream));
+        const stream = ytdl(video.url, {quality: 'highestaudio', filter: 'audioonly'})
+        queue.push(createAudioResource<yts.VideoSearchResult>(stream, {metadata: video}));
     }
 
     private playFromQueue() {
@@ -78,22 +78,20 @@ class Play implements Command {
             console.log('Message from child', video);
             if (video && this.subscription) {
                 this.addToQueue(video);
-                this.buildMessage(video.title, video.thumbnail);
+                this.sendMessage(video.title, video.thumbnail);
                 if (!this.playing) { this.playFromQueue() }
             }
         });
         return child;
     }
 
-    private buildMessage(title: string, thumbnail: string) {
+    private sendMessage(title: string, thumbnail: string) {
         const status = this.playing ? "Queued " : "Now playing ";
         const message = status + `***${title}***`;
         const messageEmbed = new MessageEmbed()
             .setTitle(message)
             .setThumbnail(thumbnail)
-            .addFields(
-                { name: 'Queue size', value: `${queue.size()}`, inline: true }
-            )
+        if (this.playing) { messageEmbed.addField("Estimated time until playing: ", queue.duration().toString()) }
         this.message.channel.send({ embeds: [messageEmbed] });
     }
 }

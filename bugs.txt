@@ -6,5 +6,10 @@ AudioPlayerError: aborted
     at TCP.done (node:_tls_wrap:573:7)
 when playing, might want to look at handling disconnects
 https://discordjs.guide/voice/audio-player.html#life-cycle
+https://github.com/fent/node-ytdl-core/issues/902
 
 Randomly received a OggDemuxer.onStreamError when playing
+
+Need to handle queues longer than 10 messages
+    DiscordAPIError: Invalid Form Body
+    embeds: Must be 10 or fewer in length. Must be 10 or fewer in length.
