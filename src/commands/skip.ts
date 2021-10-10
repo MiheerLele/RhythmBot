@@ -1,6 +1,6 @@
 import { Message } from "discord.js";
 import { Command } from "./interfaces/Command";
-import { play } from "./play";
+import { AudioUtil } from "../util/AudioUtil"; 
 
 class Skip implements Command {
     name: string;
@@ -10,7 +10,7 @@ class Skip implements Command {
     }
 
     execute(message: Message, args: string[]) {
-        play.audioPlayer.stop();
+        AudioUtil.audioPlayer.stop();
     }
 }
 

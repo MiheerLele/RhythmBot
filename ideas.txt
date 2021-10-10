@@ -6,3 +6,17 @@ Authors [21 Savage, Trippie Redd, J Cole]
 On queue empty
     search for authors[random_index]
     return videos[random_song]
+
+Will probably have to extract the playing music functionality into its own setup
+    Setup connection
+    Setup subscription
+    Setup audioPlayer
+    etc.
+
+Remove from queue by either value or index
+    var array = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0];
+    var filtered = array.filter(function(value, index, arr){ 
+        return value > 5;
+    });
+    //filtered => [6, 7, 8, 9]
+    //array => [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]

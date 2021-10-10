@@ -10,12 +10,6 @@ https://github.com/fent/node-ytdl-core/issues/902
 
 Randomly received a OggDemuxer.onStreamError when playing
 
-Need to handle queues longer than 10 messages and of 0 messages
-    DiscordAPIError: Invalid Form Body
-    embeds: Must be 10 or fewer in length. Must be 10 or fewer in length.
-
-    DiscordAPIError: Cannot send an empty message
-
 Sending !play messages too fast results in some songs being lost
     !play stay
     !play gnf

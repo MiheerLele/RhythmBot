@@ -1,6 +1,6 @@
 import { Message, MessageEmbed } from "discord.js";
 import { Command } from "./interfaces/Command";
-import { queue as songs } from "../queue/Queue"
+import { queue as songs } from "../util/Queue"
 
 class Queue implements Command {
     name: string;

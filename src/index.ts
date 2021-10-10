@@ -20,7 +20,7 @@ client.on("messageCreate", async message => {
 
     for (const command of commands) {
         if (command.name === userCommand) {
-            await command.execute(message, args);
+            command.execute(message, args);
             return;
         }
     }
