@@ -1,5 +1,4 @@
 import { ChildProcess, fork } from "child_process";
-import { Message, MessageEmbed } from "discord.js";
 import { VideoSearchResult } from "yt-search";
 import { AudioUtil } from "./AudioUtil";
 import { queue } from "./Queue";

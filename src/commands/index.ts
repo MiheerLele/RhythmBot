@@ -4,6 +4,7 @@ import { play } from "./play";
 import { skip } from "./skip";
 import { queue } from "./queue";
 import { autoplay } from "./autoplay";
+import { remove } from "./remove";
 
-const commands: Command[] = [ping, play, skip, queue, autoplay];
+const commands: Command[] = [ping, play, skip, queue, autoplay, remove];
 export { commands };

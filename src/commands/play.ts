@@ -11,14 +11,12 @@ import { MessageUtil } from "../util/MessageUtil";
 
 class Play implements Command {
     name: string;
-    private message: Message;
 
     constructor() {
         this.name = "play";
     }
 
     execute(message: Message, args: string[]) {
-        this.message = message;
         const voiceChannel = message.member?.voice.channel;
         if (!voiceChannel) { return message.channel.send("Get in a voice channel first, damn"); }
         if (!args.length) { return message.channel.send("Play what?"); }

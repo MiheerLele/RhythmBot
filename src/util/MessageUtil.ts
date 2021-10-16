@@ -31,6 +31,14 @@ export class MessageUtil {
         this.message.channel.send({ embeds: [msgEmbed] });
     }
 
+    public static sendRemoved(video: yts.VideoSearchResult) {
+        if (!this.message) { return }
+
+        const status = "Removed ";
+        const msgEmbed: MessageEmbed = this.getMessageEmbed(status, video);
+        this.message.channel.send({ embeds: [msgEmbed] });
+    }
+
     private static getMessageEmbed(status: string, video: yts.VideoSearchResult): MessageEmbed {
         const msg = status + `***${video.title}***`;
         const msgEmbed = new MessageEmbed()

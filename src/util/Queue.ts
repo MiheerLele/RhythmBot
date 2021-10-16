@@ -62,6 +62,16 @@ class Queue {
         const stream = ytdl(video.url, {quality: 'highestaudio', filter: 'audioonly'});
         this.push(createAudioResource<yts.VideoSearchResult>(stream, {metadata: video}));
     }
+
+    public remove(index: number): void {
+        MessageUtil.sendRemoved(this._store[index].metadata);
+        this._store.splice(index, 1);
+    }
+
+    // public removeString(specifier: string) {
+    //     // Search queue for title or something
+    //     // Remove last occurance
+    // }
 }
 
 export const queue = new Queue();
