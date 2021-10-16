@@ -14,8 +14,6 @@ class Queue implements Command {
         embeds.length > 0 ? 
             message.channel.send({ embeds: embeds }) : 
             message.channel.send("Nothing in the queue, use !play");
-
-
     }
 }
 

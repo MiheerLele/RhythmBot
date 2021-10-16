@@ -7,9 +7,16 @@ AudioPlayerError: aborted
 when playing, might want to look at handling disconnects
 https://discordjs.guide/voice/audio-player.html#life-cycle
 https://github.com/fent/node-ytdl-core/issues/902
+    - Switched to different version of node
+    - Hasnt occured in a while
 
 Randomly received a OggDemuxer.onStreamError when playing
+    - Hasnt occurred in a long time
 
 Sending !play messages too fast results in some songs being lost
     !play stay
     !play gnf
+
+/Users/miheerlele/Projects/DiscordBot/node_modules/@discordjs/voice/dist/audio/AudioPlayer.js:194
+            throw new Error('Cannot play a resource that has already ended.');
+    - Fix implemented, still testing
