@@ -1,6 +1,7 @@
 import { AudioPlayer, AudioPlayerPlayingState, AudioPlayerStatus, AudioResource, createAudioPlayer, getVoiceConnection, joinVoiceChannel, PlayerSubscription } from "@discordjs/voice";
 import { StageChannel, VoiceChannel } from "discord.js";
 import yts from "yt-search";
+import { AutoPlayUtil } from "./AutoPlayUtil";
 import { queue } from "./Queue";
 
 export class AudioUtil {
@@ -30,14 +31,22 @@ export class AudioUtil {
             // Song duration - the number of millis the resource has been playing for
             return songLen - this.audioPlayer.state.playbackDuration;
         }
+        return 0;
+    }
+
+    public static getCurrentArtist(): string{
+        if (this.audioPlayer.state.status === AudioPlayerStatus.Playing) {
+            const resource = this.audioPlayer.state.resource as AudioResource<yts.VideoSearchResult>;
+            return resource.metadata.author.name;
+        }
+        return "";
     }
 
     // Create audio player and setup events to handle
     private static createAudioPlayer(): AudioPlayer {
         const audioPlayer = createAudioPlayer();
         audioPlayer.on(AudioPlayerStatus.Idle, () => {
-            this.playing = false;
-            queue.play();
+            this.onAudioPlayerIdle();
         })
         audioPlayer.on(AudioPlayerStatus.Playing, () => {
             this.playing = true;
@@ -46,5 +55,14 @@ export class AudioUtil {
             console.error(error);
         })
         return audioPlayer;
+    }
+
+    private static onAudioPlayerIdle() {
+        this.playing = false;
+        if (queue.size() == 0 && AutoPlayUtil.isAutoPlaying()) {
+            AutoPlayUtil.autoPlay();
+        } else {
+            queue.play();
+        }
     }
 }

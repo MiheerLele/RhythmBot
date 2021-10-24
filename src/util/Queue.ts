@@ -1,12 +1,15 @@
-import { AudioPlayer, AudioResource, createAudioResource } from '@discordjs/voice';
+import { AudioPlayer, AudioResource, createAudioResource, StreamType } from '@discordjs/voice';
 import { MessageEmbed } from 'discord.js';
 import yts from 'yt-search';
 import ytdl from 'ytdl-core';
 import { AudioUtil } from './AudioUtil'; 
+import { AutoPlayUtil } from './AutoPlayUtil';
+import { ChildUtil } from './ChildUtil';
 import { MessageUtil } from './MessageUtil';
 
 class Queue {
     private _store: AudioResource<yts.VideoSearchResult>[] = [];
+    private _artists: Set<string> = new Set<string>();
 
     private push(val: AudioResource<yts.VideoSearchResult>) {
         this._store.push(val);
@@ -59,6 +62,7 @@ class Queue {
 
     public add(video: yts.VideoSearchResult) {
         if (AudioUtil.isPlaying()) { MessageUtil.sendQueued(video) }
+        AutoPlayUtil.addArtist(video.author.name);
         const stream = ytdl(video.url, {quality: 'highestaudio', filter: 'audioonly'});
         this.push(createAudioResource<yts.VideoSearchResult>(stream, {metadata: video}));
     }
@@ -72,6 +76,10 @@ class Queue {
     //     // Search queue for title or something
     //     // Remove last occurance
     // }
+
+    public clear() {
+        this._store = [];
+    }
 }
 
 export const queue = new Queue();

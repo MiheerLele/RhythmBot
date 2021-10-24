@@ -20,3 +20,17 @@ Sending !play messages too fast results in some songs being lost
 /Users/miheerlele/Projects/DiscordBot/node_modules/@discordjs/voice/dist/audio/AudioPlayer.js:194
             throw new Error('Cannot play a resource that has already ended.');
     - Fix implemented, still testing
+
+AudioPlayerError: Status code: 403
+    at ClientRequest.<anonymous> (/Users/miheerlele/Projects/DiscordBot/node_modules/miniget/dist/index.js:210:27)
+    at Object.onceWrapper (events.js:520:26)
+    at ClientRequest.emit (events.js:400:28)
+    at HTTPParser.parserOnIncomingClient [as onIncoming] (_http_client.js:647:27)
+    at HTTPParser.parserOnHeadersComplete (_http_common.js:127:17)
+    at HTTPParser.execute (<anonymous>)
+    at TLSSocket.socketOnData (_http_client.js:515:22)
+    at TLSSocket.emit (events.js:400:28)
+    at addChunk (internal/streams/readable.js:293:12)
+    at readableAddChunk (internal/streams/readable.js:267:9) {
+        - https://github.com/fent/node-ytdl-core/issues/417
+        - https://github.com/fent/node-ytdl-core/issues/932

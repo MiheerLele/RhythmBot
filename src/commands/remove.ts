@@ -14,10 +14,6 @@ class Remove implements Command {
         MessageUtil.setMessage(message);
         const arg = args.join(' ');
         let index: number = parseInt(arg);
-        // if (isNaN(index)) {
-        //     queue.removeString(arg);
-        //     // need a way to tell if the remove failed
-        // }
         // Translate human numbering to computer numbering with index - 1
         if (isNaN(index)) { return }
         index = index - 1;

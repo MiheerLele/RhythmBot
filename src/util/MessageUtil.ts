@@ -24,7 +24,7 @@ export class MessageUtil {
 
         const status = "Queued ";
         const msgEmbed: MessageEmbed = this.getMessageEmbed(status, video);
-        // This function will execute before the queue is incremented
+        // This function should execute before the queue is incremented
         // making the queue duration + current playing resource the estimated time until playing
         const timeUntilPlay = AudioUtil.getRemainingPlayback() + queue.duration();
         msgEmbed.addField("Estimated time until playing: ", moment.duration(timeUntilPlay).humanize())

@@ -1,22 +1,25 @@
 import { Message, MessageEmbed } from "discord.js";
 import { Command } from "./interfaces/Command";
 import { AutoPlayUtil } from "../util/AutoPlayUtil";
+import { queue } from "../util/Queue";
+import { AudioUtil } from "../util/AudioUtil";
 
-class Autoplay implements Command {
+class Stop implements Command {
     name: string;
 
     constructor() {
-        this.name = "autoplay";
+        this.name = "stop";
     }
 
     execute(message: Message, args: string[]) {
-        AutoPlayUtil.toggleAutoPlay();
-        const status = AutoPlayUtil.isAutoPlaying() ? "ON" : "OFF";
+        AutoPlayUtil.stopAutoPlay();
+        queue.clear();
+        AudioUtil.audioPlayer.stop();
         const msgEmbed = new MessageEmbed()
-            .setTitle(`Autoplay is now ***${status}***`);
+            .setTitle(`Autoplay is now off and the queue is empty`);
         message.channel.send({ embeds: [msgEmbed] })
     }
 }
 
-const autoplay = new Autoplay();
-export { autoplay };
+const stop = new Stop();
+export { stop };
