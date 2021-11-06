@@ -11,9 +11,8 @@ class AutoplayRemove implements Command {
     }
 
     execute(message: Message, args: string[]) {
-        const artist = AudioUtil.getCurrentArtist();
+        const artist = args.join(' ');
         AutoPlayUtil.removeArtist(artist);
-        AudioUtil.audioPlayer.stop();
         const msgEmbed = new MessageEmbed()
             .setTitle(`Removed ***${artist}*** from autoplay rotation`);
         message.channel.send({ embeds: [msgEmbed] })

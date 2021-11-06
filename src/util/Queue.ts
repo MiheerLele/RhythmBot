@@ -54,15 +54,24 @@ class Queue {
 
     public play() {
         const resource: AudioResource<yts.VideoSearchResult> | undefined = this.pop();
-        if (resource && !(resource.playStream.readableEnded || resource.playStream.destroyed)) {
-            MessageUtil.sendPlaying(resource.metadata);
-            AudioUtil.audioPlayer.play(resource);
+        if (resource) {
+            if (!(resource.playStream.readableEnded || resource.playStream.destroyed)) {
+                MessageUtil.sendPlaying(resource.metadata);
+                AudioUtil.audioPlayer.play(resource);
+            } else {
+                console.log(resource); // gotta find out why the playstream is messed up
+                this.play(); // move onto next song for now
+            }
+        } else {
+            console.log(`Queue size: ${queue.size()}, Resource ${resource}`);
+            // Probably should autoplay from here, but its kinda messy
+            // Could throw an error and catch it
         }
     }
 
     public add(video: yts.VideoSearchResult) {
         if (AudioUtil.isPlaying()) { MessageUtil.sendQueued(video) }
-        AutoPlayUtil.addArtist(video.author.name);
+        AutoPlayUtil.addArtist(video);
         const stream = ytdl(video.url, {quality: 'highestaudio', filter: 'audioonly'});
         this.push(createAudioResource<yts.VideoSearchResult>(stream, {metadata: video}));
     }

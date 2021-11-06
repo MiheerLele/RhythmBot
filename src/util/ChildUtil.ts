@@ -12,7 +12,6 @@ export class ChildUtil {
             // AudioUtil.subscription has a chance of being undefined here
             if (video) {
                 console.log('Message from child', video.title);
-                console.log(video.author.name);
                 queue.add(video);
                 if (!AudioUtil.isPlaying()) { queue.play() }
             }

@@ -19,8 +19,7 @@ process.on('message', async (request: ChildRequest) => {
 
 async function fetchVideo(request: ChildRequest): Promise<yts.VideoSearchResult | null> {
     // Temporary fix to get more relevant videos
-    request.query = request.random ? request.query + "music" : request.query;
-    // Category param doesn't actually work as a yt query search param
+    // request.query = request.random ? request.query + " music" : request.query;
     const videoResult = await yts({query: request.query, category: 'music'});
     const numVid = videoResult.videos.length;
     // If random return random result, if not return first if there is one

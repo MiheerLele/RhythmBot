@@ -1,4 +1,4 @@
-import { AudioPlayer, AudioPlayerPlayingState, AudioPlayerStatus, AudioResource, createAudioPlayer, getVoiceConnection, joinVoiceChannel, PlayerSubscription } from "@discordjs/voice";
+import { AudioPlayer, AudioPlayerStatus, AudioResource, createAudioPlayer, getVoiceConnection, joinVoiceChannel, PlayerSubscription } from "@discordjs/voice";
 import { StageChannel, VoiceChannel } from "discord.js";
 import yts from "yt-search";
 import { AutoPlayUtil } from "./AutoPlayUtil";
@@ -34,18 +34,20 @@ export class AudioUtil {
         return 0;
     }
 
-    public static getCurrentArtist(): string{
-        if (this.audioPlayer.state.status === AudioPlayerStatus.Playing) {
-            const resource = this.audioPlayer.state.resource as AudioResource<yts.VideoSearchResult>;
-            return resource.metadata.author.name;
-        }
-        return "";
-    }
+    // public static getCurrentArtist(): string{
+    //     if (this.audioPlayer.state.status === AudioPlayerStatus.Playing) {
+    //         const resource = this.audioPlayer.state.resource as AudioResource<yts.VideoSearchResult>;
+    //         const [artist, title] = getArtistTitle(resource.metadata.title, { defaultArtist: resource.metadata.author.name });
+    //         return artist;
+    //     }
+    //     return "";
+    // }
 
     // Create audio player and setup events to handle
     private static createAudioPlayer(): AudioPlayer {
         const audioPlayer = createAudioPlayer();
         audioPlayer.on(AudioPlayerStatus.Idle, () => {
+            console.log("Idle");
             this.onAudioPlayerIdle();
         })
         audioPlayer.on(AudioPlayerStatus.Playing, () => {

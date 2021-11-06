@@ -34,3 +34,10 @@ AudioPlayerError: Status code: 403
     at readableAddChunk (internal/streams/readable.js:267:9) {
         - https://github.com/fent/node-ytdl-core/issues/417
         - https://github.com/fent/node-ytdl-core/issues/932
+
+Will sometimes eat songs that are queued? Unsure if its related but will stop playing and not throw error message
+
+Both the 403 and eaten songs can possibly be recovered if you had a function retry(AudioResource) that retried the request
+    - Or could try storing the video instead of the resource
+    - And retrying 403
+    - Seem to be related to poor internet connection

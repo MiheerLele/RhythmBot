@@ -1,11 +1,17 @@
 import { ChildUtil } from "./ChildUtil";
+import getArtistTitle from "get-artist-title";
+import yts from "yt-search";
 
 export class AutoPlayUtil {
     private static _artists: Set<string> = new Set();
     private static autoPlaying: boolean = true;
 
-    public static addArtist(artist: string) {
-        this._artists.add(artist);
+    public static addArtist(video: yts.VideoSearchResult) {
+        const [front, back] = getArtistTitle(video.title, { defaultArtist: video.author.name });
+        const artistsFromFront = front.split(","); // Sometimes two artists
+        const artistsFromBack = [] //back.split("ft.")[1].split(",")
+        const artists = [...artistsFromFront, ...artistsFromBack]
+        artists.forEach((a) => this._artists.add(a));
     }
 
     public static removeArtist(artist: string) {
