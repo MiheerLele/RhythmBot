@@ -13,7 +13,7 @@ export class ChildUtil {
             if (video) {
                 console.log('Message from child', video.title);
                 queue.add(video);
-                if (!AudioUtil.isPlaying()) { queue.play() }
+                if (!AudioUtil.isPlaying()) { AudioUtil.play() }
             }
         });
         return child;

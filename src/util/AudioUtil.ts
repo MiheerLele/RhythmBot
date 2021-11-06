@@ -1,7 +1,9 @@
-import { AudioPlayer, AudioPlayerStatus, AudioResource, createAudioPlayer, getVoiceConnection, joinVoiceChannel, PlayerSubscription } from "@discordjs/voice";
+import { AudioPlayer, AudioPlayerStatus, AudioResource, createAudioPlayer, createAudioResource, getVoiceConnection, joinVoiceChannel, PlayerSubscription } from "@discordjs/voice";
 import { StageChannel, VoiceChannel } from "discord.js";
 import yts from "yt-search";
+import ytdl from "ytdl-core";
 import { AutoPlayUtil } from "./AutoPlayUtil";
+import { MessageUtil } from "./MessageUtil";
 import { queue } from "./Queue";
 
 export class AudioUtil {
@@ -55,6 +57,12 @@ export class AudioUtil {
         })
         audioPlayer.on('error', (error) => {
             console.error(error);
+            console.error(error.name);
+            console.error(error.message);
+            if (error.message === "Status code: 403") {
+                const resource = error.resource as AudioResource<yts.VideoSearchResult>
+                this.playResource(resource);
+            }
         })
         return audioPlayer;
     }
@@ -64,7 +72,34 @@ export class AudioUtil {
         if (queue.size() == 0 && AutoPlayUtil.isAutoPlaying()) {
             AutoPlayUtil.autoPlay();
         } else {
-            queue.play();
+            this.play();
         }
+    }
+
+    public static play() {
+        let resource: AudioResource<yts.VideoSearchResult> | undefined = queue.pop();
+        if (resource) {
+            this.playResource(resource);
+        }
+    }
+
+    private static retryResource(resource: AudioResource<yts.VideoSearchResult>): AudioResource<yts.VideoSearchResult> {
+        const RETRY_LIMIT = 3;
+        let retries = 0;
+        let retResource = resource;
+        while (retries < RETRY_LIMIT && (retResource.playStream.readableEnded || retResource.playStream.destroyed)) {
+            console.log("Retried:");
+            console.log(retResource);
+            const stream = ytdl(retResource.metadata.url, {quality: 'highestaudio', filter: 'audioonly'});
+            retResource = createAudioResource<yts.VideoSearchResult>(stream, {metadata: retResource.metadata});
+            retries += 1;
+        }
+        return retResource;
+    }
+
+    private static playResource(resource: AudioResource<yts.VideoSearchResult>) {
+        this.retryResource(resource);
+        MessageUtil.sendPlaying(resource.metadata);
+        AudioUtil.audioPlayer.play(resource);
     }
 }

@@ -1,10 +1,9 @@
-import { AudioPlayer, AudioResource, createAudioResource, StreamType } from '@discordjs/voice';
+import { AudioResource, createAudioResource } from '@discordjs/voice';
 import { MessageEmbed } from 'discord.js';
 import yts from 'yt-search';
 import ytdl from 'ytdl-core';
 import { AudioUtil } from './AudioUtil'; 
 import { AutoPlayUtil } from './AutoPlayUtil';
-import { ChildUtil } from './ChildUtil';
 import { MessageUtil } from './MessageUtil';
 
 class Queue {
@@ -15,7 +14,7 @@ class Queue {
         this._store.push(val);
     }
 
-    private pop(): AudioResource<yts.VideoSearchResult> | undefined{
+    public pop(): AudioResource<yts.VideoSearchResult> | undefined{
         return this._store.shift();
     }
 
@@ -52,22 +51,24 @@ class Queue {
         return embeds;
     }
 
-    public play() {
-        const resource: AudioResource<yts.VideoSearchResult> | undefined = this.pop();
-        if (resource) {
-            if (!(resource.playStream.readableEnded || resource.playStream.destroyed)) {
-                MessageUtil.sendPlaying(resource.metadata);
-                AudioUtil.audioPlayer.play(resource);
-            } else {
-                console.log(resource); // gotta find out why the playstream is messed up
-                this.play(); // move onto next song for now
-            }
-        } else {
-            console.log(`Queue size: ${queue.size()}, Resource ${resource}`);
-            // Probably should autoplay from here, but its kinda messy
-            // Could throw an error and catch it
-        }
-    }
+    // Needs refactor, maybe move the actual playing into the AudioUtil
+    // public play() {
+    //     const resource: AudioResource<yts.VideoSearchResult> | undefined = this.pop();
+    //     if (resource) {
+    //         if (!(resource.playStream.readableEnded || resource.playStream.destroyed)) {
+    //             MessageUtil.sendPlaying(resource.metadata);
+    //             AudioUtil.audioPlayer.play(resource);
+    //             // client.user.setActivity({name: resource.metadata.title, type: 'LISTENING'});
+    //         } else {
+    //             console.log(resource); // gotta find out why the playstream is messed up
+    //             this.play(); // move onto next song for now
+    //         }
+    //     } else {
+    //         console.log(`Queue size: ${queue.size()}, Resource ${resource}`);
+    //         // Probably should autoplay from here, but its kinda messy
+    //         // Could throw an error and catch it
+    //     }
+    // }
 
     public add(video: yts.VideoSearchResult) {
         if (AudioUtil.isPlaying()) { MessageUtil.sendQueued(video) }
