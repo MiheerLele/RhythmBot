@@ -90,16 +90,20 @@ export class AudioUtil {
         while (retries < RETRY_LIMIT && (retResource.playStream.readableEnded || retResource.playStream.destroyed)) {
             console.log("Retried:");
             console.log(retResource);
-            const stream = ytdl(retResource.metadata.url, {quality: 'highestaudio', filter: 'audioonly'});
-            retResource = createAudioResource<yts.VideoSearchResult>(stream, {metadata: retResource.metadata});
+            retResource = this.createAudioResource(resource.metadata);
             retries += 1;
         }
         return retResource;
     }
 
     private static playResource(resource: AudioResource<yts.VideoSearchResult>) {
-        this.retryResource(resource);
-        MessageUtil.sendPlaying(resource.metadata);
-        AudioUtil.audioPlayer.play(resource);
+        const newResource = this.retryResource(resource);
+        MessageUtil.sendPlaying(newResource.metadata);
+        AudioUtil.audioPlayer.play(newResource);
+    }
+
+    public static createAudioResource(video: yts.VideoSearchResult): AudioResource<yts.VideoSearchResult> {
+        const stream = ytdl(video.url, {quality: 'highestaudio', filter: 'audioonly'});
+        return createAudioResource<yts.VideoSearchResult>(stream, {metadata: video});
     }
 }

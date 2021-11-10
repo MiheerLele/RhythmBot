@@ -7,11 +7,22 @@ export class AutoPlayUtil {
     private static autoPlaying: boolean = true;
 
     public static addArtist(video: yts.VideoSearchResult) {
-        const [front, back] = getArtistTitle(video.title, { defaultArtist: video.author.name });
-        const artistsFromFront = front.split(","); // Sometimes two artists
-        const artistsFromBack = [] //back.split("ft.")[1].split(",")
-        const artists = [...artistsFromFront, ...artistsFromBack]
+        const [artist, title] = getArtistTitle(video.title, { defaultArtist: video.author.name });
+        let artists = artist.split(","); // Sometimes two artists
+        // artists = artists.forEach((a) => a.split(""))
+        // const artists = this.parseArtists(artist);
         artists.forEach((a) => this._artists.add(a));
+    }
+
+    private static parseArtists(orig: string): string[] {
+        const delimiters = [",", "&", "ft.", "Feat.", "feat."]
+        let artists = [orig];
+        delimiters.forEach((delim) => {
+            artists.forEach((artist) => {
+                artist.split(delim) // have to collect all of these splits and put into array
+            })
+        });
+        return artists;
     }
 
     public static removeArtist(artist: string) {
@@ -31,11 +42,11 @@ export class AutoPlayUtil {
 
     public static toggleAutoPlay() {
         this.autoPlaying = !this.autoPlaying;
-        this._artists = new Set<string>();
     }
 
     public static stopAutoPlay() {
         this.autoPlaying = false;
+        this._artists = new Set<string>();
     }
 
     private static randIndex(len: number): number {

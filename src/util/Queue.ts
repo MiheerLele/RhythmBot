@@ -1,14 +1,12 @@
 import { AudioResource, createAudioResource } from '@discordjs/voice';
 import { MessageEmbed } from 'discord.js';
 import yts from 'yt-search';
-import ytdl from 'ytdl-core';
 import { AudioUtil } from './AudioUtil'; 
 import { AutoPlayUtil } from './AutoPlayUtil';
 import { MessageUtil } from './MessageUtil';
 
 class Queue {
     private _store: AudioResource<yts.VideoSearchResult>[] = [];
-    private _artists: Set<string> = new Set<string>();
 
     private push(val: AudioResource<yts.VideoSearchResult>) {
         this._store.push(val);
@@ -51,30 +49,10 @@ class Queue {
         return embeds;
     }
 
-    // Needs refactor, maybe move the actual playing into the AudioUtil
-    // public play() {
-    //     const resource: AudioResource<yts.VideoSearchResult> | undefined = this.pop();
-    //     if (resource) {
-    //         if (!(resource.playStream.readableEnded || resource.playStream.destroyed)) {
-    //             MessageUtil.sendPlaying(resource.metadata);
-    //             AudioUtil.audioPlayer.play(resource);
-    //             // client.user.setActivity({name: resource.metadata.title, type: 'LISTENING'});
-    //         } else {
-    //             console.log(resource); // gotta find out why the playstream is messed up
-    //             this.play(); // move onto next song for now
-    //         }
-    //     } else {
-    //         console.log(`Queue size: ${queue.size()}, Resource ${resource}`);
-    //         // Probably should autoplay from here, but its kinda messy
-    //         // Could throw an error and catch it
-    //     }
-    // }
-
     public add(video: yts.VideoSearchResult) {
         if (AudioUtil.isPlaying()) { MessageUtil.sendQueued(video) }
         AutoPlayUtil.addArtist(video);
-        const stream = ytdl(video.url, {quality: 'highestaudio', filter: 'audioonly'});
-        this.push(createAudioResource<yts.VideoSearchResult>(stream, {metadata: video}));
+        this.push(AudioUtil.createAudioResource(video));
     }
 
     public remove(index: number): void {
