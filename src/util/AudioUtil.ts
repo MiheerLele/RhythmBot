@@ -1,4 +1,4 @@
-import { AudioPlayer, AudioPlayerStatus, AudioResource, createAudioPlayer, createAudioResource, getVoiceConnection, joinVoiceChannel, PlayerSubscription } from "@discordjs/voice";
+import { AudioPlayer, AudioPlayerError, AudioPlayerStatus, AudioResource, createAudioPlayer, createAudioResource, getVoiceConnection, joinVoiceChannel, PlayerSubscription } from "@discordjs/voice";
 import { StageChannel, VoiceChannel } from "discord.js";
 import yts from "yt-search";
 import ytdl from "ytdl-core";
@@ -36,43 +36,40 @@ export class AudioUtil {
         return 0;
     }
 
-    // public static getCurrentArtist(): string{
-    //     if (this.audioPlayer.state.status === AudioPlayerStatus.Playing) {
-    //         const resource = this.audioPlayer.state.resource as AudioResource<yts.VideoSearchResult>;
-    //         const [artist, title] = getArtistTitle(resource.metadata.title, { defaultArtist: resource.metadata.author.name });
-    //         return artist;
-    //     }
-    //     return "";
-    // }
-
     // Create audio player and setup events to handle
     private static createAudioPlayer(): AudioPlayer {
         const audioPlayer = createAudioPlayer();
-        audioPlayer.on(AudioPlayerStatus.Idle, () => {
-            console.log("Idle");
-            this.onAudioPlayerIdle();
-        })
-        audioPlayer.on(AudioPlayerStatus.Playing, () => {
-            this.playing = true;
-        })
-        audioPlayer.on('error', (error) => {
-            console.error(error);
-            console.error(error.name);
-            console.error(error.message);
-            if (error.message === "Status code: 403") {
-                const resource = error.resource as AudioResource<yts.VideoSearchResult>
-                this.playResource(resource);
-            }
-        })
+        audioPlayer.on(AudioPlayerStatus.Idle, () => { this.onAudioPlayerIdle() })
+        audioPlayer.on(AudioPlayerStatus.Playing, () => { this.onAudioPlayerPlaying() })
+        audioPlayer.on('error', (error) => { this.onAudioPlayerError(error) })
         return audioPlayer;
     }
 
     private static onAudioPlayerIdle() {
+        console.log("Idle");
         this.playing = false;
         if (queue.size() == 0 && AutoPlayUtil.isAutoPlaying()) {
             AutoPlayUtil.autoPlay();
         } else {
             this.play();
+        }
+    }
+
+    private static onAudioPlayerPlaying() {
+        this.playing = true;
+        if (this.audioPlayer.state.status === AudioPlayerStatus.Playing) {
+            const resource = this.audioPlayer.state.resource as AudioResource<yts.VideoSearchResult>;
+            MessageUtil.sendPlaying(resource.metadata);
+        }
+    }
+
+    private static onAudioPlayerError(error: AudioPlayerError) {
+        console.log(`Message: ${error.message}`);
+        if (error.message === "Status code: 403") {
+            const resource = error.resource as AudioResource<yts.VideoSearchResult>
+            this.playResource(resource);
+        } else {
+            console.error(error);
         }
     }
 
@@ -88,17 +85,18 @@ export class AudioUtil {
         let retries = 0;
         let retResource = resource;
         while (retries < RETRY_LIMIT && (retResource.playStream.readableEnded || retResource.playStream.destroyed)) {
-            console.log("Retried:");
-            console.log(retResource);
+            console.log("Retried");
+            // console.log(retResource);
             retResource = this.createAudioResource(resource.metadata);
             retries += 1;
         }
+        console.log(`Retries needed ${retries}`);
         return retResource;
     }
 
     private static playResource(resource: AudioResource<yts.VideoSearchResult>) {
         const newResource = this.retryResource(resource);
-        MessageUtil.sendPlaying(newResource.metadata);
+        // MessageUtil.sendPlaying(newResource.metadata);
         AudioUtil.audioPlayer.play(newResource);
     }
 
