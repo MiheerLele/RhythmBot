@@ -1,6 +1,7 @@
 import { Client, Intents } from "discord.js";
 import dotenv from 'dotenv';
 import { commands } from './commands/index';
+import { AudioUtil } from "./util/AudioUtil";
 
 dotenv.config();
 global.AbortController = require("node-abort-controller").AbortController;
@@ -25,7 +26,20 @@ client.on("messageCreate", async message => {
         }
     }
 
-    message.channel.send("No command found, blame Garrett");
+    message.channel.send(`No command found, blame ${message.author}`);
 });
+
+client.on("voiceStateUpdate", (oldState, newState) => {
+
+    // if nobody left the channel in question, return.
+    if (oldState.channelId !== oldState.guild.me.voice.channelId || newState.channel)
+      return;
+  
+    // Just the bot
+    if (oldState.channel.members.size == 1) {
+        AudioUtil.leave(oldState.channel);
+        process.exit(0);
+    }
+  });
 
 client.login(process.env.DISCORD_TOKEN);

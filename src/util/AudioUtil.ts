@@ -22,6 +22,12 @@ export class AudioUtil {
         }
     }
 
+    public static leave(voiceChannel: VoiceChannel | StageChannel) {
+        this.subscription.unsubscribe();
+        let connection = getVoiceConnection(voiceChannel.guild.id);
+        connection.destroy();
+    }
+
     public static isPlaying(): boolean {
         return this.playing;
     }
@@ -86,17 +92,14 @@ export class AudioUtil {
         let retResource = resource;
         while (retries < RETRY_LIMIT && (retResource.playStream.readableEnded || retResource.playStream.destroyed)) {
             console.log("Retried");
-            // console.log(retResource);
             retResource = this.createAudioResource(resource.metadata);
             retries += 1;
         }
-        console.log(`Retries needed ${retries}`);
         return retResource;
     }
 
     private static playResource(resource: AudioResource<yts.VideoSearchResult>) {
         const newResource = this.retryResource(resource);
-        // MessageUtil.sendPlaying(newResource.metadata);
         AudioUtil.audioPlayer.play(newResource);
     }
 

@@ -8,20 +8,18 @@ export class AutoPlayUtil {
 
     public static addArtist(video: yts.VideoSearchResult) {
         const [artist, title] = getArtistTitle(video.title, { defaultArtist: video.author.name });
-        let artists = artist.split(","); // Sometimes two artists
-        // artists = artists.forEach((a) => a.split(""))
-        // const artists = this.parseArtists(artist);
-        artists.forEach((a) => this._artists.add(a));
+        const artists = this.parseArtists(artist);
+        artists.forEach((a) => this._artists.add(a.trim()));
     }
 
     private static parseArtists(orig: string): string[] {
         const delimiters = [",", "&", "ft.", "Feat.", "feat."]
-        let artists = [orig];
-        delimiters.forEach((delim) => {
-            artists.forEach((artist) => {
-                artist.split(delim) // have to collect all of these splits and put into array
-            })
-        });
+        let artists = delimiters.flatMap(delim => orig.split(delim));
+        // If the artists list is larger than the delimiters, it means artists were parsed
+        if (artists.length > delimiters.length) {
+            artists = artists.filter(artist => artist != orig);
+        }
+        console.log(artists);
         return artists;
     }
 

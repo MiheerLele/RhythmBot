@@ -10,6 +10,8 @@ class Skip implements Command {
     }
 
     execute(message: Message, args: string[]) {
+        // If autoplayed, remove from the playlist, but then have to be careful ig
+        // Artist can sometimes give wack results anyway
         AudioUtil.audioPlayer.stop();
     }
 }

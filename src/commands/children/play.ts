@@ -11,20 +11,22 @@ process.on('message', async (request: ChildRequest) => {
     process.send(video);
 });
 
-// let counter = 0;
-
-// setInterval(() => {
-//   process.send({ counter: counter++ });
-// }, 1000);
-
 async function fetchVideo(request: ChildRequest): Promise<yts.VideoSearchResult | null> {
-    // Temporary fix to get more relevant videos
-    // request.query = request.random ? request.query + " music" : request.query;
     const videoResult = await yts({query: request.query, category: 'music'});
-    const numVid = videoResult.videos.length;
     // If random return random result, if not return first if there is one
-    return request.random ? videoResult.videos[randIndex(numVid)] : 
-        ((videoResult.videos.length > 1) ? videoResult.videos[0] : null);
+    return request.random ? getRandomVideo(videoResult) : getFirstVideo(videoResult);
+}
+
+function getRandomVideo(results: yts.SearchResult): yts.VideoSearchResult {
+    const cutoff = 420; // 7 min 
+    const filteredVideos = results.videos.filter(video => video.seconds <= cutoff);
+    console.log(`Videos filtered out: ${results.videos.length - filteredVideos.length}`);
+    console.log(`Filtered Videos Length: ${filteredVideos.length}`);
+    return filteredVideos[randIndex(filteredVideos.length)];
+}
+
+function getFirstVideo(results: yts.SearchResult): yts.VideoSearchResult | null {
+    return results.videos.length > 1 ? results.videos[0]: null;
 }
 
 // Returns a random number [0, len)

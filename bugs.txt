@@ -1,43 +1,20 @@
-AudioPlayerError: aborted
-    at connResetException (node:internal/errors:642:14)
-    at TLSSocket.socketCloseListener (node:_http_client:414:27)
-    at TLSSocket.emit (node:events:390:22)
-    at node:net:665:12
-    at TCP.done (node:_tls_wrap:573:7)
-when playing, might want to look at handling disconnects
-https://discordjs.guide/voice/audio-player.html#life-cycle
-https://github.com/fent/node-ytdl-core/issues/902
-    - Switched to different version of node
-    - Hasnt occured in a while
-
-Randomly received a OggDemuxer.onStreamError when playing
-    - Hasnt occurred in a long time
-
 Sending !play messages too fast results in some songs being lost
     !play stay
     !play gnf
 
-/Users/miheerlele/Projects/DiscordBot/node_modules/@discordjs/voice/dist/audio/AudioPlayer.js:194
-            throw new Error('Cannot play a resource that has already ended.');
-    - Fix implemented, still testing
+Will sometimes eat songs that are queued? Unsure if its related but will stop playing and not throw error message
 
-AudioPlayerError: Status code: 403
+AudioPlayerError: Status code: 410
     at ClientRequest.<anonymous> (/Users/miheerlele/Projects/DiscordBot/node_modules/miniget/dist/index.js:210:27)
     at Object.onceWrapper (events.js:520:26)
     at ClientRequest.emit (events.js:400:28)
-    at HTTPParser.parserOnIncomingClient [as onIncoming] (_http_client.js:647:27)
+    at HTTPParser.parserOnIncomingClient (_http_client.js:647:27)
     at HTTPParser.parserOnHeadersComplete (_http_common.js:127:17)
-    at HTTPParser.execute (<anonymous>)
     at TLSSocket.socketOnData (_http_client.js:515:22)
     at TLSSocket.emit (events.js:400:28)
     at addChunk (internal/streams/readable.js:293:12)
-    at readableAddChunk (internal/streams/readable.js:267:9) {
-        - https://github.com/fent/node-ytdl-core/issues/417
-        - https://github.com/fent/node-ytdl-core/issues/932
-
-Will sometimes eat songs that are queued? Unsure if its related but will stop playing and not throw error message
-
-Both the 403 and eaten songs can possibly be recovered if you had a function retry(AudioResource) that retried the request
-    - Or could try storing the video instead of the resource
-    - And retrying 403
-    - Seem to be related to poor internet connection
+    at readableAddChunk (internal/streams/readable.js:267:9)
+    at TLSSocket.Readable.push (internal/streams/readable.js:206:10)
+    - HTTP code GONE, resource permanently moved
+    - Big Sean - Control Feat Kendrick Lamar & Jay Electronica, Lyrics on Screen
+    - https://youtube.com/watch?v=W7zdMeZPkpY
