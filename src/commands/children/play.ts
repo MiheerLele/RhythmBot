@@ -18,8 +18,12 @@ async function fetchVideo(request: ChildRequest): Promise<yts.VideoSearchResult 
 }
 
 function getRandomVideo(results: yts.SearchResult): yts.VideoSearchResult {
-    const cutoff = 420; // 7 min 
-    const filteredVideos = results.videos.filter(video => video.seconds <= cutoff);
+    let cutoff = 330; // 5:30 min 
+    let filteredVideos = results.videos.filter(video => video.seconds <= cutoff);
+    while (filteredVideos.length == 0) { // In case all videos are filtered out
+        cutoff += 30; // Add 30 seconds to the cutoff
+        filteredVideos = results.videos.filter(video => video.seconds <= cutoff);
+    }
     console.log(`Videos filtered out: ${results.videos.length - filteredVideos.length}`);
     console.log(`Filtered Videos Length: ${filteredVideos.length}`);
     return filteredVideos[randIndex(filteredVideos.length)];
