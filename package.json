@@ -21,7 +21,7 @@
     "node-abort-controller": "^3.0.1",
     "sodium": "^3.0.2",
     "yt-search": "^2.10.1",
-    "ytdl-core": "^4.9.1"
+    "ytdl-core": "^4.9.2"
   },
   "devDependencies": {
     "typescript": "^4.4.3"

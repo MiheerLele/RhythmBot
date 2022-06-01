@@ -8,12 +8,19 @@ import { MessageUtil } from './MessageUtil';
 class Queue {
     private _store: AudioResource<yts.VideoSearchResult>[] = [];
 
+    // Adds to end
     private push(val: AudioResource<yts.VideoSearchResult>) {
         this._store.push(val);
     }
 
+    // Removes from front
     public pop(): AudioResource<yts.VideoSearchResult> | undefined{
         return this._store.shift();
+    }
+
+    // Adds to front, currently unused
+    public unpop(val: AudioResource<yts.VideoSearchResult>) {
+        this._store.unshift(val);
     }
 
     public size(): number {
@@ -28,15 +35,15 @@ class Queue {
     }
 
     public list(): MessageEmbed[] {
-        // Create a copy of the queue and reverse it
-        let songsCopy = [...this._store].reverse();
+        // Create a copy of the first 10 songs in the queue and reverse it
         const maxEmbedPerMessage = 10;
-        let embeds: MessageEmbed[] = [];
         const iters = Math.min(maxEmbedPerMessage, this._store.length);
+        let songsReverse = this._store.slice(0, iters).reverse();
+        let embeds: MessageEmbed[] = [];
 
         // Loop through and create message embeds for each item
         for (let i = 0; i < iters; i++) {
-            const val = songsCopy[i];
+            const val = songsReverse[i];
             const embed = new MessageEmbed()
                 .setTitle(val.metadata.title)
                 .setThumbnail(val.metadata.thumbnail)

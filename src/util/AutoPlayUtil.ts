@@ -8,7 +8,7 @@ export class AutoPlayUtil {
 
     public static addArtist(video: yts.VideoSearchResult) {
         const [artist, title] = getArtistTitle(video.title, { defaultArtist: video.author.name });
-        if (artist === '') { return; } // dunno why artist would return ''
+        if (artist.trim() === '') { return; }
         const artists = artist.split(/[,&x]|ft\.|feat\.|Feat\./);
         artists.forEach((a) => this._artists.add(a.trim()));
     }

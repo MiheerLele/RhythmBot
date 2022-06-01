@@ -13,7 +13,7 @@ class Play implements Command {
 
     execute(message: Message, args: string[]) {
         const voiceChannel = message.member?.voice.channel;
-        if (!voiceChannel) { return message.channel.send("Get in a voice channel first, damn"); }
+        if (!voiceChannel) { return message.channel.send("Get in a voice channel first"); }
         if (!args.length) { return message.channel.send("Play what?"); }
 
         AudioUtil.setup(voiceChannel);

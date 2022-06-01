@@ -18,7 +18,7 @@ async function fetchVideo(request: ChildRequest): Promise<yts.VideoSearchResult 
 }
 
 function getRandomVideo(results: yts.SearchResult): yts.VideoSearchResult {
-    let cutoff = 330; // 5:30 min 
+    let cutoff = 300; // 5:00 min 
     let filteredVideos = results.videos.filter(video => video.seconds <= cutoff);
     while (filteredVideos.length == 0) { // In case all videos are filtered out
         cutoff += 30; // Add 30 seconds to the cutoff
