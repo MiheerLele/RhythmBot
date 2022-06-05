@@ -1,4 +1,4 @@
-import { AudioPlayer, AudioPlayerError, AudioPlayerStatus, AudioResource, createAudioPlayer, createAudioResource, getVoiceConnection, joinVoiceChannel, PlayerSubscription } from "@discordjs/voice";
+import { AudioPlayer, AudioPlayerError, AudioPlayerStatus, AudioResource, createAudioPlayer, createAudioResource, DiscordGatewayAdapterCreator, getVoiceConnection, joinVoiceChannel, PlayerSubscription } from "@discordjs/voice";
 import { StageChannel, VoiceChannel } from "discord.js";
 import yts from "yt-search";
 import ytdl from "ytdl-core";
@@ -14,7 +14,11 @@ export class AudioUtil {
     public static setup(voiceChannel: VoiceChannel | StageChannel) {
         let connection = getVoiceConnection(voiceChannel.guild.id);
         if (!connection) {
-            connection = joinVoiceChannel({ channelId: voiceChannel.id, guildId: voiceChannel.guild.id, adapterCreator: voiceChannel.guild.voiceAdapterCreator });
+            connection = joinVoiceChannel({ 
+                channelId: voiceChannel.id, 
+                guildId: voiceChannel.guild.id, 
+                adapterCreator: voiceChannel.guild.voiceAdapterCreator
+            });
         }
 
         if (!this.subscription) {

@@ -8,7 +8,6 @@ global.AbortController = require("node-abort-controller").AbortController;
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES]});
 const prefix = '!';
 
-
 client.on("ready", () => {
     console.log("BouqBash DJ is online!");
 })
@@ -19,15 +18,25 @@ client.on("messageCreate", async message => {
     const args = message.content.slice(prefix.length).split(/ +/);
     const userCommand: string = args.shift()!.toLowerCase();
 
+    message.channel.send(`Big changes, use /${userCommand} instead`);
+});
+
+
+client.on("interactionCreate", async (interaction) => {
+    if (!interaction.isCommand()) return;
+
+    const { commandName } = interaction;
+
     for (const command of commands) {
-        if (command.name === userCommand) {
-            command.execute(message, args);
+        if (command.name === commandName) {
+            command.execute(interaction);
             return;
         }
     }
 
-    message.channel.send(`No command found, blame ${message.author}`);
-});
+    interaction.reply(`No command found, blame ${interaction.user}`)
+})
+
 
 client.on("voiceStateUpdate", (oldState, newState) => {
 
@@ -40,6 +49,6 @@ client.on("voiceStateUpdate", (oldState, newState) => {
         AudioUtil.leave(oldState.channel);
         process.exit(0);
     }
-  });
+});
 
 client.login(process.env.DISCORD_TOKEN);

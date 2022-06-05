@@ -1,21 +1,34 @@
-import { Message, MessageEmbed } from "discord.js";
+import { CommandInteraction, MessageEmbed } from "discord.js";
 import { Command } from "./interfaces/Command";
 import { AutoPlayUtil } from "../util/AutoPlayUtil";
-import { AudioUtil } from "../util/AudioUtil";
+import { OptionType, SlashCommandDefinition } from "./interfaces/SlashCommand";
 
 class AutoplayRemove implements Command {
     name: string;
+    description: string;
+    slashCommandDefinition: SlashCommandDefinition;
 
     constructor() {
         this.name = "autoplay-remove";
+        this.description = "[DEV ONLY] Removes a artist from the autoplay rotation"
+        this.slashCommandDefinition = {
+            name: this.name,
+            description: this.description,
+            options: [{
+                name: "artist",
+                description: "The artist you want to remove",
+                type: OptionType.STRING,
+                required: true
+            }]
+        }
     }
 
-    execute(message: Message, args: string[]) {
-        const artist = args.join(' ');
+    execute(interaction: CommandInteraction) {
+        const artist = interaction.options.getString("artists")
         AutoPlayUtil.removeArtist(artist);
         const msgEmbed = new MessageEmbed()
             .setTitle(`Removed ***${artist}*** from autoplay rotation`);
-        message.channel.send({ embeds: [msgEmbed] })
+        interaction.reply({ embeds: [msgEmbed] })
     }
 }
 
