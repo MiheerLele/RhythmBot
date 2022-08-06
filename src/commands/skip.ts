@@ -1,7 +1,9 @@
-import { CommandInteraction } from "discord.js";
+import { CommandInteraction, MessageEmbed } from "discord.js";
 import { Command } from "./interfaces/Command";
 import { AudioUtil } from "../util/AudioUtil"; 
 import { SlashCommandDefinition } from "./interfaces/SlashCommand";
+import { AudioPlayerStatus, AudioResource } from "@discordjs/voice";
+import yts from "yt-search";
 
 class Skip implements Command {
     name: string;
@@ -18,7 +20,17 @@ class Skip implements Command {
     }
 
     execute(interaction: CommandInteraction) {
-        AudioUtil.audioPlayer.stop();
+        const msgEmbed = new MessageEmbed();
+            
+        if (AudioUtil.audioPlayer.state.status === AudioPlayerStatus.Playing) {
+            const resource = AudioUtil.audioPlayer.state.resource as AudioResource<yts.VideoSearchResult>;
+            msgEmbed.setTitle(`Skipping ${resource.metadata.title}`)
+            AudioUtil.audioPlayer.stop();
+        } else {
+            msgEmbed.setTitle("Nothing playing, nothing to skip")
+        } 
+
+        interaction.reply({embeds: [msgEmbed]})
     }
 }
 

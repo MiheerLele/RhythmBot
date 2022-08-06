@@ -29,7 +29,7 @@ class Play implements Command {
         const member = interaction.member as GuildMember
         const voiceChannel = member.voice.channel
         if (!voiceChannel) { return interaction.reply("Get in a voice channel first"); }
-
+        
         AudioUtil.setup(voiceChannel);
         MessageUtil.setMessage(interaction);
         ChildUtil.child.send({query: interaction.options.getString("query")});

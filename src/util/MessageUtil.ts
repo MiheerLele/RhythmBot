@@ -4,6 +4,12 @@ import { AudioUtil } from "./AudioUtil";
 import { queue } from "./Queue";
 import moment from 'moment';
 
+export enum MessageAction {
+    PLAYING = "Now playing",
+    QUEUED = "Queued",
+    REMOVED = "Removed"
+}
+
 export class MessageUtil {
     private static interaction: CommandInteraction;
 
@@ -14,16 +20,16 @@ export class MessageUtil {
     public static sendPlaying(video: yts.VideoSearchResult) {
         if (!this.interaction) { return }
 
-        const status = "Now playing ";
-        const msgEmbed: MessageEmbed = this.getMessageEmbed(status, video);
+        const action = MessageAction.PLAYING
+        const msgEmbed: MessageEmbed = this.buildBaseEmbed(action, video);
         this.interaction.channel.send({ embeds: [msgEmbed] });
     }
 
     public static sendQueued(video: yts.VideoSearchResult) {
         if (!this.interaction) { return }
 
-        const status = "Queued ";
-        const msgEmbed: MessageEmbed = this.getMessageEmbed(status, video);
+        const action = MessageAction.QUEUED;
+        const msgEmbed: MessageEmbed = this.buildBaseEmbed(action, video);
         // This function should execute before the queue is incremented
         // making the queue duration + current playing resource the estimated time until playing
         const timeUntilPlay = AudioUtil.getRemainingPlayback() + queue.duration();
@@ -31,16 +37,25 @@ export class MessageUtil {
         this.interaction.channel.send({ embeds: [msgEmbed] });
     }
 
-    public static sendRemoved(video: yts.VideoSearchResult) {
-        if (!this.interaction) { return }
+    // public static sendRemoved(video: yts.VideoSearchResult) {
+    //     if (!this.interaction) { return }
 
-        const status = "Removed ";
-        const msgEmbed: MessageEmbed = this.getMessageEmbed(status, video);
-        this.interaction.channel.send({ embeds: [msgEmbed] });
+    //     const action = MessageAction.REMOVED;
+    //     const msgEmbed: MessageEmbed = this.buildBaseEmbed(action, video);
+    //     this.interaction.channel.send({ embeds: [msgEmbed] });
+    // }
+
+    public static buildEmbed(action: MessageAction, video: yts.VideoSearchResult): MessageEmbed {
+        let embed = this.buildBaseEmbed(action, video)
+        if (action === MessageAction.QUEUED) {
+            const timeUntilPlay = AudioUtil.getRemainingPlayback() + queue.duration();
+            embed.addField("Estimated time until playing: ", moment.duration(timeUntilPlay).humanize())
+        }
+        return embed
     }
 
-    private static getMessageEmbed(status: string, video: yts.VideoSearchResult): MessageEmbed {
-        const msg = status + `***${video.title}***`;
+    private static buildBaseEmbed(action: MessageAction, video: yts.VideoSearchResult): MessageEmbed {
+        const msg = action + ` ***${video.title}***`;
         const msgEmbed = new MessageEmbed()
             .setTitle(msg)
             .setThumbnail(video.thumbnail)

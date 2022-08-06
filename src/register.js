@@ -14,6 +14,6 @@ rest.put(Routes.applicationGuildCommands(process.env.APP_ID, process.env.BOT_TES
 	.then(() => console.log('Successfully registered application commands for test guild.'))
 	.catch(console.error)
 
-rest.put(Routes.applicationGuildCommands(process.env.APP_ID, process.env.MIKES_GUILD_ID), { body: definitions })
-	.then(() => console.log('Successfully registered application commands for mikes guild.'))
-	.catch(console.error)
+// rest.put(Routes.applicationGuildCommands(process.env.APP_ID, process.env.MIKES_GUILD_ID), { body: definitions })
+// 	.then(() => console.log('Successfully registered application commands for mikes guild.'))
+// 	.catch(console.error)

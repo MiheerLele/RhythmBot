@@ -1,7 +1,7 @@
-import { CommandInteraction } from "discord.js";
+import { CommandInteraction, MessageEmbed } from "discord.js";
 import { Command } from "./interfaces/Command";
 import { queue } from "../util/Queue";
-import { MessageUtil } from "../util/MessageUtil";
+import { MessageAction, MessageUtil } from "../util/MessageUtil";
 import { OptionType, SlashCommandDefinition } from "./interfaces/SlashCommand";
 
 class Remove implements Command {
@@ -26,14 +26,19 @@ class Remove implements Command {
 
     execute(interaction: CommandInteraction) {
         MessageUtil.setMessage(interaction);
+        let msgEmbed: MessageEmbed
+
         let index = interaction.options.getInteger("position")
         // Translate human numbering to computer numbering with index - 1
         index = index - 1;
         if (index >= 0 && index < queue.size()) {
-            queue.remove(index);
+            const removedVid = queue.remove(index);
+            msgEmbed = MessageUtil.buildEmbed(MessageAction.REMOVED, removedVid)
         } else {
-            interaction.reply(`Not a valid song. ${queue.size()} songs in the queue`);
+            msgEmbed = new MessageEmbed()
+                .setTitle(`Not a valid song. ***${queue.size()}*** songs in the queue`);
         }
+        interaction.reply({ embeds: [msgEmbed] });
     }
 }
 

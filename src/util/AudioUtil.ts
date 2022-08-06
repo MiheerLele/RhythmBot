@@ -10,8 +10,11 @@ export class AudioUtil {
     public static readonly audioPlayer: AudioPlayer = this.createAudioPlayer();
     private static playing: boolean = false;
     private static subscription: PlayerSubscription | undefined;
+    private static bitrate: number // In kpbs
 
     public static setup(voiceChannel: VoiceChannel | StageChannel) {
+        this.bitrate = voiceChannel.bitrate / 1000
+
         let connection = getVoiceConnection(voiceChannel.guild.id);
         if (!connection) {
             connection = joinVoiceChannel({ 
@@ -33,7 +36,7 @@ export class AudioUtil {
     }
 
     public static isPlaying(): boolean {
-        return this.playing;
+        return this.playing; // this.audioPlayer.state.status === AudioPlayerStatus.Playing
     }
 
     public static getRemainingPlayback(): number {
@@ -108,7 +111,11 @@ export class AudioUtil {
     }
 
     public static createAudioResource(video: yts.VideoSearchResult): AudioResource<yts.VideoSearchResult> {
-        const stream = ytdl(video.url, {quality: 'highestaudio', filter: 'audioonly'});
+        // const stream = ytdl(video.url, {quality: 'highestaudio', filter: 'audioonly'});
+        const stream = ytdl(video.url, {quality: 'highestaudio', filter: (format => {
+            return format.audioBitrate <= this.bitrate // https://github.com/discordjs/discord.js/issues/5202
+        })});
+        
         return createAudioResource<yts.VideoSearchResult>(stream, {metadata: video});
     }
 }
