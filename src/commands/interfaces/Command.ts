@@ -1,6 +1,9 @@
-import { Message } from "discord.js";
+import { CommandInteraction } from "discord.js";
+import { SlashCommandDefinition } from "./SlashCommand";
 
 export interface Command{
     name: string;
-    execute(message: Message, args: string[]): void;
+    description: string;
+    slashCommandDefinition: SlashCommandDefinition
+    execute(interaction: CommandInteraction): void;
 }

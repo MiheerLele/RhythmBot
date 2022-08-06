@@ -1,4 +1,5 @@
 import yts, { VideoSearchResult } from "yt-search";
+import { randIndex } from "../../util/Math"
 
 interface ChildRequest {
     query: string,
@@ -31,9 +32,4 @@ function getRandomVideo(results: yts.SearchResult): yts.VideoSearchResult {
 
 function getFirstVideo(results: yts.SearchResult): yts.VideoSearchResult | null {
     return results.videos.length > 1 ? results.videos[0]: null;
-}
-
-// Returns a random number [0, len)
-function randIndex(len: number): number {
-    return Math.floor(Math.random() * len);
 }

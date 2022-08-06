@@ -62,9 +62,10 @@ class Queue {
         this.push(AudioUtil.createAudioResource(video));
     }
 
-    public remove(index: number): void {
-        MessageUtil.sendRemoved(this._store[index].metadata);
+    public remove(index: number): yts.VideoSearchResult {
+        const video = this._store[index].metadata
         this._store.splice(index, 1);
+        return video;
     }
 
     // public removeString(specifier: string) {

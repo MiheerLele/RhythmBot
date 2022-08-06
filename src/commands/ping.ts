@@ -1,15 +1,24 @@
-import { Message } from "discord.js";
+import { SlashCommandBuilder } from "@discordjs/builders";
+import { CommandInteraction } from "discord.js";
 import { Command } from "./interfaces/Command";
+import { SlashCommandDefinition } from "./interfaces/SlashCommand";
 
 class Ping implements Command {
     name: string;
+    description: string;
+    slashCommandDefinition: SlashCommandDefinition;
 
     constructor() {
         this.name = "ping";
+        this.description = "Pongs!";
+        this.slashCommandDefinition = {
+            name: this.name,
+            description: this.description
+        }
     }
 
-    execute(message: Message, args: string[]) {
-        message.channel.send("pong");
+    execute(interaction: CommandInteraction) {
+        interaction.reply("pong");
     }
 }
 
