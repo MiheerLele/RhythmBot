@@ -25,20 +25,17 @@ class Remove implements Command {
     }
 
     execute(interaction: CommandInteraction) {
-        MessageUtil.setMessage(interaction);
-        let msgEmbed: MessageEmbed
-
         let index = interaction.options.getInteger("position")
-        // Translate human numbering to computer numbering with index - 1
+        // 1 index numbering to 0 index numbering
         index = index - 1;
         if (index >= 0 && index < queue.size()) {
             const removedVid = queue.remove(index);
-            msgEmbed = MessageUtil.buildEmbed(MessageAction.REMOVED, removedVid)
+            MessageUtil.send(MessageAction.REMOVED, removedVid, interaction);
         } else {
-            msgEmbed = new MessageEmbed()
+            const embed = new MessageEmbed()
                 .setTitle(`Not a valid song. ***${queue.size()}*** songs in the queue`);
+            interaction.reply({ embeds: [embed] });
         }
-        interaction.reply({ embeds: [msgEmbed] });
     }
 }
 

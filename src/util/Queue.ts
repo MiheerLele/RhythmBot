@@ -1,9 +1,9 @@
-import { AudioResource, createAudioResource } from '@discordjs/voice';
+import { AudioResource } from '@discordjs/voice';
 import { MessageEmbed } from 'discord.js';
 import yts from 'yt-search';
 import { AudioUtil } from './AudioUtil'; 
 import { AutoPlayUtil } from './AutoPlayUtil';
-import { MessageUtil } from './MessageUtil';
+import { MessageAction, MessageUtil } from './MessageUtil';
 
 class Queue {
     private _store: AudioResource<yts.VideoSearchResult>[] = [];
@@ -57,7 +57,7 @@ class Queue {
     }
 
     public add(video: yts.VideoSearchResult) {
-        if (AudioUtil.isPlaying()) { MessageUtil.sendQueued(video) }
+        if (AudioUtil.isPlaying()) { MessageUtil.send(MessageAction.QUEUED ,video) }
         AutoPlayUtil.addArtist(video);
         this.push(AudioUtil.createAudioResource(video));
     }

@@ -1,10 +1,11 @@
 import { ChildProcess, fork } from "child_process";
 import { VideoSearchResult } from "yt-search";
+import { ChildRequest } from "../commands/children/play";
 import { AudioUtil } from "./AudioUtil";
 import { queue } from "./Queue";
 
 export class ChildUtil {
-    public static readonly child: ChildProcess = this.setupChild();
+    private static readonly child: ChildProcess = this.setupChild();
     
     private static setupChild(): ChildProcess {
         const child: ChildProcess = fork("./dist/commands/children/play.js");
@@ -17,5 +18,9 @@ export class ChildUtil {
             }
         });
         return child;
+    }
+
+    public static send(payload: ChildRequest) {
+        this.child.send(payload);
     }
 }

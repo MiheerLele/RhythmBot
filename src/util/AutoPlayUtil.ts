@@ -22,7 +22,7 @@ export class AutoPlayUtil {
         if (this._artists.size == 0) { return }
         const artists = Array.from(this._artists);
         console.log(artists);
-        ChildUtil.child.send({query: artists[randIndex(artists.length)], random: true});
+        ChildUtil.send({query: artists[randIndex(artists.length)], random: true});
     }
 
     public static isAutoPlaying() {
