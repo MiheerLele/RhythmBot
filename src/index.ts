@@ -2,6 +2,7 @@ import { Client, Intents } from "discord.js";
 import dotenv from 'dotenv';
 import { commands } from './commands/index';
 import { AudioUtil } from "./util/AudioUtil";
+import { MessageUtil } from "./util/MessageUtil";
 
 dotenv.config();
 global.AbortController = require("node-abort-controller").AbortController;
@@ -29,6 +30,7 @@ client.on("interactionCreate", async (interaction) => {
 
     for (const command of commands) {
         if (command.name === commandName) {
+            MessageUtil.setChannel(interaction);
             command.execute(interaction);
             return;
         }

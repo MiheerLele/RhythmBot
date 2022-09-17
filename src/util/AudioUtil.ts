@@ -3,7 +3,7 @@ import { StageChannel, VoiceChannel } from "discord.js";
 import yts from "yt-search";
 import ytdl from "ytdl-core";
 import { AutoPlayUtil } from "./AutoPlayUtil";
-import { MessageUtil } from "./MessageUtil";
+import { MessageAction, MessageUtil } from "./MessageUtil";
 import { queue } from "./Queue";
 
 export class AudioUtil {
@@ -72,7 +72,7 @@ export class AudioUtil {
         this.playing = true;
         if (this.audioPlayer.state.status === AudioPlayerStatus.Playing) {
             const resource = this.audioPlayer.state.resource as AudioResource<yts.VideoSearchResult>;
-            MessageUtil.sendPlaying(resource.metadata);
+            MessageUtil.send(MessageAction.PLAYING, resource.metadata);
         }
     }
 

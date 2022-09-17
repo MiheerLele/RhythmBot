@@ -1,4 +1,3 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction, MessageEmbed } from "discord.js";
 import { AudioUtil } from "../util/AudioUtil";
 import { Command } from "./interfaces/Command";

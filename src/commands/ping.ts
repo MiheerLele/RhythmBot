@@ -1,4 +1,3 @@
-import { SlashCommandBuilder } from "@discordjs/builders";
 import { CommandInteraction } from "discord.js";
 import { Command } from "./interfaces/Command";
 import { SlashCommandDefinition } from "./interfaces/SlashCommand";

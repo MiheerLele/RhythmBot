@@ -2,7 +2,6 @@ import { CommandInteraction, GuildMember } from "discord.js";
 import { Command } from "./interfaces/Command";
 import { AudioUtil } from "../util/AudioUtil";
 import { ChildUtil } from "../util/ChildUtil";
-import { MessageUtil } from "../util/MessageUtil";
 import { OptionType, SlashCommandDefinition } from "./interfaces/SlashCommand";
 
 class Play implements Command {
@@ -29,10 +28,12 @@ class Play implements Command {
         const member = interaction.member as GuildMember
         const voiceChannel = member.voice.channel
         if (!voiceChannel) { return interaction.reply("Get in a voice channel first"); }
-        
+
+        const query = interaction.options.getString("query");
         AudioUtil.setup(voiceChannel);
-        MessageUtil.setMessage(interaction);
-        ChildUtil.child.send({query: interaction.options.getString("query")});
+        ChildUtil.send({query: query});
+
+        interaction.reply(`Searching for: ***${query}***\nRequested by: ${member}`);
     }
 }
 
