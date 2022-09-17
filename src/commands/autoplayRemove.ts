@@ -24,7 +24,7 @@ class AutoplayRemove implements Command {
     }
 
     execute(interaction: CommandInteraction) {
-        const artist = interaction.options.getString("artists")
+        const artist = interaction.options.getString("artist")
         AutoPlayUtil.removeArtist(artist);
         const msgEmbed = new MessageEmbed()
             .setTitle(`Removed ***${artist}*** from autoplay rotation`);
