@@ -31,5 +31,5 @@ function getRandomVideo(results: yts.SearchResult): yts.VideoSearchResult {
 }
 
 function getFirstVideo(results: yts.SearchResult): yts.VideoSearchResult | null {
-    return results.videos.length > 1 ? results.videos[0]: null;
+    return results.videos.length > 1 ? results.videos[0] : null;
 }

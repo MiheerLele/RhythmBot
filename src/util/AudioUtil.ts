@@ -1,4 +1,14 @@
-import { AudioPlayer, AudioPlayerError, AudioPlayerStatus, AudioResource, createAudioPlayer, createAudioResource, DiscordGatewayAdapterCreator, getVoiceConnection, joinVoiceChannel, PlayerSubscription } from "@discordjs/voice";
+import { 
+    AudioPlayer,
+    AudioPlayerError,
+    AudioPlayerStatus,
+    AudioResource,
+    createAudioPlayer,
+    createAudioResource,
+    getVoiceConnection,
+    joinVoiceChannel,
+    PlayerSubscription 
+} from "@discordjs/voice";
 import { StageChannel, VoiceChannel } from "discord.js";
 import yts from "yt-search";
 import ytdl from "ytdl-core";
@@ -78,7 +88,7 @@ export class AudioUtil {
 
     private static onAudioPlayerError(error: AudioPlayerError) {
         console.log(`Message: ${error.message}`);
-        if (error.message === "Status code: 403") {
+        if (error.message === "Status code: 403") { // Error often solved by retrying
             const resource = error.resource as AudioResource<yts.VideoSearchResult>
             this.playResource(resource);
         } else {
@@ -111,7 +121,6 @@ export class AudioUtil {
     }
 
     public static createAudioResource(video: yts.VideoSearchResult): AudioResource<yts.VideoSearchResult> {
-        // const stream = ytdl(video.url, {quality: 'highestaudio', filter: 'audioonly'});
         const stream = ytdl(video.url, {quality: 'highestaudio', filter: (format => {
             return format.audioBitrate <= this.bitrate // https://github.com/discordjs/discord.js/issues/5202
         })});

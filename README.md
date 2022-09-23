@@ -1,4 +1,4 @@
-# RythmBot
+# BouqBash DJ
 
 Run the following to run the bot
 ```

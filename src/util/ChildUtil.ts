@@ -10,7 +10,6 @@ export class ChildUtil {
     private static setupChild(): ChildProcess {
         const child: ChildProcess = fork("./dist/commands/children/play.js");
         child.on('message', (video: VideoSearchResult | null) => {
-            // AudioUtil.subscription has a chance of being undefined here
             if (video) {
                 console.log('Message from child', video.title);
                 queue.add(video);
