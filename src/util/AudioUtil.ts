@@ -1,6 +1,7 @@
 import { 
     AudioPlayer,
     AudioPlayerError,
+    AudioPlayerPlayingState,
     AudioPlayerStatus,
     AudioResource,
     createAudioPlayer,
@@ -46,7 +47,7 @@ export class AudioUtil {
     }
 
     public static isPlaying(): boolean {
-        return this.playing; // this.audioPlayer.state.status === AudioPlayerStatus.Playing
+        return this.audioPlayer.state.status === AudioPlayerStatus.Playing
     }
 
     public static getRemainingPlayback(): number {
@@ -70,7 +71,6 @@ export class AudioUtil {
 
     private static onAudioPlayerIdle() {
         console.log("Idle");
-        this.playing = false;
         if (queue.size() == 0 && AutoPlayUtil.isAutoPlaying()) {
             AutoPlayUtil.autoPlay();
         } else {
@@ -79,11 +79,10 @@ export class AudioUtil {
     }
 
     private static onAudioPlayerPlaying() {
-        this.playing = true;
-        if (this.audioPlayer.state.status === AudioPlayerStatus.Playing) {
-            const resource = this.audioPlayer.state.resource as AudioResource<yts.VideoSearchResult>;
-            MessageUtil.send(MessageAction.PLAYING, resource.metadata);
-        }
+        const state = this.audioPlayer.state as AudioPlayerPlayingState
+        const resource = state.resource as AudioResource<yts.VideoSearchResult>;
+        AutoPlayUtil.addArtist(resource.metadata);
+        MessageUtil.send(MessageAction.PLAYING, resource.metadata);
     }
 
     private static onAudioPlayerError(error: AudioPlayerError) {
@@ -103,7 +102,7 @@ export class AudioUtil {
         }
     }
 
-    private static retryResource(resource: AudioResource<yts.VideoSearchResult>): AudioResource<yts.VideoSearchResult> {
+    private static buildResource(resource: AudioResource<yts.VideoSearchResult>): AudioResource<yts.VideoSearchResult> {
         const RETRY_LIMIT = 3;
         let retries = 0;
         let retResource = resource;
@@ -116,7 +115,7 @@ export class AudioUtil {
     }
 
     private static playResource(resource: AudioResource<yts.VideoSearchResult>) {
-        const newResource = this.retryResource(resource);
+        const newResource = this.buildResource(resource);
         AudioUtil.audioPlayer.play(newResource);
     }
 
