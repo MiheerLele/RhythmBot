@@ -10,11 +10,9 @@ export class ChildUtil {
     private static setupChild(): ChildProcess {
         const child: ChildProcess = fork("./dist/commands/children/play.js");
         child.on('message', (video: VideoSearchResult | null) => {
-            if (video) {
-                console.log('Message from child', video.title);
-                queue.add(video);
-                if (!AudioUtil.isPlaying()) { AudioUtil.play() }
-            }
+            console.log('Message from child', video.title);
+            queue.add(video);
+            if (!AudioUtil.isPlaying()) { AudioUtil.play() }
         });
         return child;
     }

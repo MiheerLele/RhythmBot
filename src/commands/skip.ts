@@ -22,10 +22,10 @@ class Skip implements Command {
     execute(interaction: CommandInteraction) {
         const msgEmbed = new MessageEmbed();
             
-        if (AudioUtil.audioPlayer.state.status === AudioPlayerStatus.Playing) {
-            const resource = AudioUtil.audioPlayer.state.resource as AudioResource<yts.VideoSearchResult>;
-            msgEmbed.setTitle(`Skipping ${resource.metadata.title}`)
-            AudioUtil.audioPlayer.stop();
+        if (AudioUtil.isPlaying()) {
+            const video = AudioUtil.getCurrentlyPlayingVideo();
+            msgEmbed.setTitle(`Skipping ${video.title}`)
+            AudioUtil.stop();
         } else {
             msgEmbed.setTitle("Nothing playing, nothing to skip")
         } 

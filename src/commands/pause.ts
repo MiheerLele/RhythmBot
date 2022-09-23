@@ -20,7 +20,7 @@ class Pause implements Command {
 
     execute(interaction: CommandInteraction) {
         this.isPaused = !this.isPaused;
-        this.isPaused ? AudioUtil.audioPlayer.pause() : AudioUtil.audioPlayer.unpause();
+        this.isPaused ? AudioUtil.pause() : AudioUtil.unpause();
         const status = this.isPaused ? "PAUSED" : "UNPAUSED";
         const msgEmbed = new MessageEmbed()
             .setTitle(`BouqBash DJ is now ***${status}***`);

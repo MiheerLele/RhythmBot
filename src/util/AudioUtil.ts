@@ -18,7 +18,7 @@ import { MessageAction, MessageUtil } from "./MessageUtil";
 import { queue } from "./Queue";
 
 export class AudioUtil {
-    public static readonly audioPlayer: AudioPlayer = this.createAudioPlayer();
+    private static readonly audioPlayer: AudioPlayer = this.createAudioPlayer();
     private static playing: boolean = false;
     private static subscription: PlayerSubscription | undefined;
     private static bitrate: number // In kpbs
@@ -50,14 +50,38 @@ export class AudioUtil {
         return this.audioPlayer.state.status === AudioPlayerStatus.Playing
     }
 
-    public static getRemainingPlayback(): number {
-        if (this.audioPlayer.state.status === AudioPlayerStatus.Playing) {
-            const resource = this.audioPlayer.state.resource as AudioResource<yts.VideoSearchResult>;
-            const songLen = resource.metadata.seconds * 1000;
-            // Song duration - the number of millis the resource has been playing for
-            return songLen - this.audioPlayer.state.playbackDuration;
+    public static pause() {
+        this.audioPlayer.pause()
+    }
+
+    public static unpause() {
+        this.audioPlayer.unpause()
+    }
+
+    public static stop() {
+        this.audioPlayer.stop()
+    }
+
+    public static getCurrentlyPlayingVideo(): yts.VideoSearchResult | null {
+        if (this.isPlaying()) {
+            const state = this.audioPlayer.state as AudioPlayerPlayingState
+            const resource = state.resource as AudioResource<yts.VideoSearchResult>;
+            return resource.metadata
+        } else {
+            return null
         }
-        return 0;
+    }
+
+    public static getRemainingPlayback(): number {
+        const video = this.getCurrentlyPlayingVideo()
+        if (video) {
+            const songLen = video.seconds * 1000;
+            const state = this.audioPlayer.state as AudioPlayerPlayingState
+            // Song duration - the number of millis the resource has been playing for
+            return songLen - state.playbackDuration;
+        } else {
+            return 0
+        }
     }
 
     // Create audio player and setup events to handle
@@ -79,10 +103,9 @@ export class AudioUtil {
     }
 
     private static onAudioPlayerPlaying() {
-        const state = this.audioPlayer.state as AudioPlayerPlayingState
-        const resource = state.resource as AudioResource<yts.VideoSearchResult>;
-        AutoPlayUtil.addArtist(resource.metadata);
-        MessageUtil.send(MessageAction.PLAYING, resource.metadata);
+        const video = this.getCurrentlyPlayingVideo();
+        AutoPlayUtil.addArtist(video);
+        MessageUtil.send(MessageAction.PLAYING, video);
     }
 
     private static onAudioPlayerError(error: AudioPlayerError) {
@@ -116,7 +139,7 @@ export class AudioUtil {
 
     private static playResource(resource: AudioResource<yts.VideoSearchResult>) {
         const newResource = this.buildResource(resource);
-        AudioUtil.audioPlayer.play(newResource);
+        this.audioPlayer.play(newResource);
     }
 
     public static createAudioResource(video: yts.VideoSearchResult): AudioResource<yts.VideoSearchResult> {

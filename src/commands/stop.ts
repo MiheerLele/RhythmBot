@@ -22,7 +22,7 @@ class Stop implements Command {
     execute(interaction: CommandInteraction) {
         AutoPlayUtil.stopAutoPlay();
         queue.clear();
-        AudioUtil.audioPlayer.stop();
+        AudioUtil.stop();
         const msgEmbed = new MessageEmbed()
             .setTitle(`Autoplay is now off and the queue is empty`);
         interaction.reply({ embeds: [msgEmbed] })

@@ -12,7 +12,7 @@ process.on('message', async (request: ChildRequest) => {
     process.send(video);
 });
 
-async function fetchVideo(request: ChildRequest): Promise<yts.VideoSearchResult | null> {
+async function fetchVideo(request: ChildRequest): Promise<yts.VideoSearchResult> {
     const videoResult = await yts({query: request.query, category: 'music'});
     // If random return random result, if not return first if there is one
     return request.random ? getRandomVideo(videoResult) : getFirstVideo(videoResult);
@@ -30,6 +30,6 @@ function getRandomVideo(results: yts.SearchResult): yts.VideoSearchResult {
     return filteredVideos[randIndex(filteredVideos.length)];
 }
 
-function getFirstVideo(results: yts.SearchResult): yts.VideoSearchResult | null {
-    return results.videos.length > 1 ? results.videos[0] : null;
+function getFirstVideo(results: yts.SearchResult): yts.VideoSearchResult {
+    return results.videos[0];
 }
