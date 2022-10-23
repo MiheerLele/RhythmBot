@@ -8,7 +8,8 @@ import {
     createAudioResource,
     getVoiceConnection,
     joinVoiceChannel,
-    PlayerSubscription 
+    PlayerSubscription, 
+    VoiceConnection
 } from "@discordjs/voice";
 import { StageChannel, VoiceChannel } from "discord.js";
 import yts from "yt-search";
@@ -19,16 +20,16 @@ import { queue } from "./Queue";
 
 export class AudioUtil {
     private static readonly audioPlayer: AudioPlayer = this.createAudioPlayer();
-    private static playing: boolean = false;
     private static subscription: PlayerSubscription | undefined;
+    private static connection: VoiceConnection | undefined;
     private static bitrate: number // In kpbs
 
     public static setup(voiceChannel: VoiceChannel | StageChannel) {
         this.bitrate = voiceChannel.bitrate / 1000
 
-        let connection = getVoiceConnection(voiceChannel.guild.id);
-        if (!connection) {
-            connection = joinVoiceChannel({ 
+        this.connection = getVoiceConnection(voiceChannel.guild.id);
+        if (!this.connection) {
+            this.connection = joinVoiceChannel({ 
                 channelId: voiceChannel.id, 
                 guildId: voiceChannel.guild.id, 
                 adapterCreator: voiceChannel.guild.voiceAdapterCreator
@@ -36,14 +37,13 @@ export class AudioUtil {
         }
 
         if (!this.subscription) {
-            this.subscription = connection.subscribe(this.audioPlayer);
+            this.subscription = this.connection.subscribe(this.audioPlayer);
         }
     }
 
-    public static leave(voiceChannel: VoiceChannel | StageChannel) {
+    public static disconnect() {
         this.subscription.unsubscribe();
-        let connection = getVoiceConnection(voiceChannel.guild.id);
-        connection.destroy();
+        this.connection.destroy();
     }
 
     public static isPlaying(): boolean {

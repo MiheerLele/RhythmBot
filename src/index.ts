@@ -7,21 +7,10 @@ import { MessageUtil } from "./util/MessageUtil";
 dotenv.config();
 global.AbortController = require("node-abort-controller").AbortController;
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES]});
-const prefix = '!';
 
 client.on("ready", () => {
     console.log("BouqBash DJ is online!");
 })
-
-client.on("messageCreate", async message => {
-    if(!message.content.startsWith(prefix) || message.author.bot) { return; }
-
-    const args = message.content.slice(prefix.length).split(/ +/);
-    const userCommand: string = args.shift()!.toLowerCase();
-
-    message.channel.send(`Big changes, use /${userCommand} instead`);
-});
-
 
 client.on("interactionCreate", async (interaction) => {
     if (!interaction.isCommand()) return;
@@ -46,9 +35,9 @@ client.on("voiceStateUpdate", (oldState, newState) => {
     if (oldState.channelId !== oldState.guild.me.voice.channelId || newState.channel)
       return;
   
-    // Just the bot
+    // Just the bot left in the channel
     if (oldState.channel.members.size == 1) {
-        AudioUtil.leave(oldState.channel);
+        AudioUtil.disconnect();
         process.exit(0);
     }
 });

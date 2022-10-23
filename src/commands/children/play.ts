@@ -2,7 +2,7 @@ import yts, { VideoSearchResult } from "yt-search";
 import { randIndex } from "../../util/Math"
 
 export interface ChildRequest {
-    query: string,
+    query: string;
     random?: boolean;
 }
 
