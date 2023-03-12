@@ -2,7 +2,7 @@
 
 Run the following to run the bot
 ```
-sh run.sh
+bash run.sh
 ```
 
 Run the following to update the slash commands
