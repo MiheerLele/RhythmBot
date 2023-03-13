@@ -1,36 +1,29 @@
-import { CommandInteraction, MessageEmbed } from "discord.js";
-import { Command } from "./interfaces/Command";
+import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
+import { Command } from "./structures/Command";
 import { AutoPlayUtil } from "../util/AutoPlayUtil";
-import { OptionType, SlashCommandDefinition } from "./interfaces/SlashCommand";
 
-class AutoplayRemove implements Command {
-    name: string;
-    description: string;
-    slashCommandDefinition: SlashCommandDefinition;
+class AutoplayRemove extends Command {
 
-    constructor() {
-        this.name = "autoplay-remove";
-        this.description = "[DEV ONLY] Removes a artist from the autoplay rotation"
-        this.slashCommandDefinition = {
-            name: this.name,
-            description: this.description,
-            options: [{
-                name: "artist",
-                description: "The artist you want to remove",
-                type: OptionType.STRING,
-                required: true
-            }]
-        }
+    constructor(name: string, description: string) {
+        super(name, description);
+        this.slashCommand.addStringOption((option) => {
+            return option
+                .setName("artist")
+                .setDescription("The artist you want to remove")
+                .setRequired(true)
+        });
     }
 
-    execute(interaction: CommandInteraction) {
+    execute(interaction: ChatInputCommandInteraction) {
         const artist = interaction.options.getString("artist")
-        AutoPlayUtil.removeArtist(artist);
-        const msgEmbed = new MessageEmbed()
-            .setTitle(`Removed ***${artist}*** from autoplay rotation`);
+        const title = AutoPlayUtil.removeArtist(artist) ?
+            `Removed ***${artist}*** from autoplay rotation` :
+            `Artist: ***${artist}*** not found in autoplay rotation`
+        const msgEmbed = new EmbedBuilder()
+            .setTitle(title)
         interaction.reply({ embeds: [msgEmbed] })
     }
 }
 
-const autoplayRemove = new AutoplayRemove();
+const autoplayRemove = new AutoplayRemove("autoplay-remove", "Removes a artist from the autoplay rotation");
 export { autoplayRemove };

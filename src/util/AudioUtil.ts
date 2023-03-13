@@ -6,6 +6,7 @@ import {
     AudioResource,
     createAudioPlayer,
     createAudioResource,
+    DiscordGatewayAdapterCreator,
     getVoiceConnection,
     joinVoiceChannel,
     PlayerSubscription, 
@@ -32,7 +33,8 @@ export class AudioUtil {
             this.connection = joinVoiceChannel({ 
                 channelId: voiceChannel.id, 
                 guildId: voiceChannel.guild.id, 
-                adapterCreator: voiceChannel.guild.voiceAdapterCreator
+                adapterCreator: voiceChannel.guild.voiceAdapterCreator as unknown as DiscordGatewayAdapterCreator
+
             });
         }
 

@@ -1,30 +1,21 @@
-import { CommandInteraction, MessageEmbed } from "discord.js";
-import { Command } from "./interfaces/Command";
+import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
+import { Command } from "./structures/Command";
 import { queue } from "../util/Queue";
 import { MessageAction, MessageUtil } from "../util/MessageUtil";
-import { OptionType, SlashCommandDefinition } from "./interfaces/SlashCommand";
 
-class Remove implements Command {
-    name: string;
-    description: string;
-    slashCommandDefinition: SlashCommandDefinition;
+class Remove extends Command {
 
-    constructor() {
-        this.name = "remove";
-        this.description = "Removes a song from the queue"
-        this.slashCommandDefinition = {
-            name: this.name,
-            description: this.description,
-            options: [{
-                name: "position",
-                description: "The queue position of the song you want to remove",
-                type: OptionType.INTEGER,
-                required: true
-            }]
-        }
+    constructor(name: string, description: string) {
+        super(name, description);
+        this.slashCommand.addIntegerOption((option) => {
+            return option
+                .setName("position")
+                .setDescription("The queue position of the song you want to remove")
+                .setRequired(true)
+        });
     }
 
-    execute(interaction: CommandInteraction) {
+    execute(interaction: ChatInputCommandInteraction) {
         let index = interaction.options.getInteger("position")
         // 1 index numbering to 0 index numbering
         index = index - 1;
@@ -32,12 +23,12 @@ class Remove implements Command {
             const removedVid = queue.remove(index);
             MessageUtil.send(MessageAction.REMOVED, removedVid, interaction);
         } else {
-            const embed = new MessageEmbed()
+            const embed = new EmbedBuilder()
                 .setTitle(`Not a valid song. ***${queue.size()}*** songs in the queue`);
             interaction.reply({ embeds: [embed] });
         }
     }
 }
 
-const remove = new Remove();
+const remove = new Remove("remove", "Removes a song from the queue");
 export { remove };

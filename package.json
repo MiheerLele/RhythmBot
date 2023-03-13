@@ -1,34 +1,34 @@
 {
-  "name": "discordbot",
+  "name": "bouqbashdj",
   "version": "1.0.0",
-  "description": "Rhythm Discord Bot",
+  "description": "Bouq Bash Discord Bot",
   "repository": "https://github.com/MiheerLele/RhythmBot",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "register": "npx tsc --build --clean && npx tsc && node src/register.js",
-    "run": "sh run.sh"
+    "start": "sh run.sh"
   },
   "author": "Miheer Lele",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/opus": "^0.8.0",
-    "@discordjs/rest": "^0.4.1",
-    "@discordjs/voice": "^0.6.0",
+    "@discordjs/opus": "^0.9.0",
+    "@discordjs/rest": "^1.6.0",
+    "@discordjs/voice": "^0.15.0",
     "@types/yt-search": "^2.3.2",
-    "discord-api-types": "^0.33.2",
-    "discord.js": "^13.1.0",
+    "discord-api-types": "^0.37.35",
+    "discord.js": "^14.8.0",
     "dotenv": "^10.0.0",
     "ffmpeg-static": "^4.4.1",
     "get-artist-title": "^1.3.1",
     "moment": "^2.29.4",
-    "node": "^14.19.1",
-    "node-abort-controller": "^3.0.1",
+    "node": "^14.21.3",
+    "node-abort-controller": "^3.1.1",
     "sodium": "^3.0.2",
-    "yt-search": "^2.10.3",
+    "yt-search": "^2.10.4",
     "ytdl-core": "^4.11.2"
   },
   "devDependencies": {
-    "typescript": "^4.7.3"
+    "typescript": "^4.9.5"
   }
 }

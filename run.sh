@@ -1,5 +1,6 @@
 # !/bin/bash
-if ! node -v | grep -Fxq "v14.18.0"; then
+# v14.18.0
+if ! node -v | grep -Fxq "v16.9.1"; then
     # Source nvm first
     . ~/.nvm/nvm.sh
     nvm use

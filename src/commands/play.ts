@@ -1,30 +1,21 @@
-import { CommandInteraction, GuildMember } from "discord.js";
-import { Command } from "./interfaces/Command";
+import { ChatInputCommandInteraction, GuildMember } from "discord.js";
+import { Command } from "./structures/Command";
 import { AudioUtil } from "../util/AudioUtil";
 import { ChildUtil } from "../util/ChildUtil";
-import { OptionType, SlashCommandDefinition } from "./interfaces/SlashCommand";
 
-class Play implements Command {
-    name: string;
-    description: string;
-    slashCommandDefinition: SlashCommandDefinition;
+class Play extends Command {
 
-    constructor() {
-        this.name = "play";
-        this.description = "Plays a song or adds to the queue if a song is already playing"
-        this.slashCommandDefinition = {
-            name: this.name,
-            description: this.description,
-            options: [{
-                name: "query",
-                description: "The song or artist you want to play",
-                type: OptionType.STRING,
-                required: true
-            }]
-        }
+    constructor(name: string, description: string) {
+        super(name, description);
+        this.slashCommand.addStringOption((option) => {
+            return option
+                .setName("query")
+                .setDescription("The song or artist you want to play")
+                .setRequired(true)
+        });
     }
 
-    execute(interaction: CommandInteraction) {
+    execute(interaction: ChatInputCommandInteraction) {
         const member = interaction.member as GuildMember
         const voiceChannel = member.voice.channel
         if (!voiceChannel) { return interaction.reply("Get in a voice channel first"); }
@@ -37,5 +28,5 @@ class Play implements Command {
     }
 }
 
-const play = new Play();
+const play = new Play("play", "Plays a song or adds to the queue if a song is already playing");
 export { play };

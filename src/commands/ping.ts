@@ -1,25 +1,12 @@
-import { CommandInteraction } from "discord.js";
-import { Command } from "./interfaces/Command";
-import { SlashCommandDefinition } from "./interfaces/SlashCommand";
+import { ChatInputCommandInteraction } from "discord.js";
+import { Command } from "./structures/Command";
 
-class Ping implements Command {
-    name: string;
-    description: string;
-    slashCommandDefinition: SlashCommandDefinition;
+class Ping extends Command {
 
-    constructor() {
-        this.name = "ping";
-        this.description = "Pongs!";
-        this.slashCommandDefinition = {
-            name: this.name,
-            description: this.description
-        }
-    }
-
-    execute(interaction: CommandInteraction) {
+    execute(interaction: ChatInputCommandInteraction) {
         interaction.reply("pong");
     }
 }
 
-const ping = new Ping();
+const ping = new Ping("ping", "Pongs!");
 export { ping };

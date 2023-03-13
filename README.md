@@ -7,5 +7,5 @@ bash run.sh
 
 Run the following to update the slash commands
 ```
-node src/register.js
+npx tsc --build --clean && npx tsc && node src/register.js
 ```

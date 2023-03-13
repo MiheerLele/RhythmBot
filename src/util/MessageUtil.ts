@@ -1,4 +1,4 @@
-import { CommandInteraction, MessageEmbed, TextBasedChannels } from "discord.js";
+import { CommandInteraction, EmbedBuilder, TextBasedChannel } from "discord.js";
 import yts from "yt-search";
 import { AudioUtil } from "./AudioUtil";
 import { queue } from "./Queue";
@@ -11,7 +11,7 @@ export enum MessageAction {
 }
 
 export class MessageUtil {
-    private static channel: TextBasedChannels;
+    private static channel: TextBasedChannel;
 
     public static setChannel(interaction: CommandInteraction) {
         this.channel = interaction.channel;
@@ -21,19 +21,18 @@ export class MessageUtil {
         let embed = this.buildBaseEmbed(action, video)
         if (action === MessageAction.QUEUED) {
             const timeUntilPlay = AudioUtil.getRemainingPlayback() + queue.duration();
-            embed.addField("Estimated time until playing: ", moment.duration(timeUntilPlay).humanize())
+            embed.addFields({
+                name: "Estimated time until playing: ", 
+                value: moment.duration(timeUntilPlay).humanize()
+            })
         }
 
-        if (interaction) {
-            interaction.reply({ embeds: [embed] });
-        } else {
-            this.channel.send({ embeds: [embed] });
-        }
+        interaction ? interaction.reply({ embeds: [embed] }) : this.channel.send({ embeds: [embed] });
     }
 
-    private static buildBaseEmbed(action: MessageAction, video: yts.VideoSearchResult): MessageEmbed {
+    private static buildBaseEmbed(action: MessageAction, video: yts.VideoSearchResult): EmbedBuilder {
         const msg = action + ` ***${video.title}***`;
-        const msgEmbed = new MessageEmbed()
+        const msgEmbed = new EmbedBuilder()
             .setTitle(msg)
             .setThumbnail(video.thumbnail)
         return msgEmbed;

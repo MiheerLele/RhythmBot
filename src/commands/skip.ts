@@ -1,26 +1,11 @@
-import { CommandInteraction, MessageEmbed } from "discord.js";
-import { Command } from "./interfaces/Command";
+import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
+import { Command } from "./structures/Command";
 import { AudioUtil } from "../util/AudioUtil"; 
-import { SlashCommandDefinition } from "./interfaces/SlashCommand";
-import { AudioPlayerStatus, AudioResource } from "@discordjs/voice";
-import yts from "yt-search";
 
-class Skip implements Command {
-    name: string;
-    description: string;
-    slashCommandDefinition: SlashCommandDefinition;
+class Skip extends Command {
 
-    constructor() {
-        this.name = "skip";
-        this.description = "Skips the currently playing song"
-        this.slashCommandDefinition = {
-            name: this.name,
-            description: this.description
-        }
-    }
-
-    execute(interaction: CommandInteraction) {
-        const msgEmbed = new MessageEmbed();
+    execute(interaction: ChatInputCommandInteraction) {
+        const msgEmbed = new EmbedBuilder();
             
         if (AudioUtil.isPlaying()) {
             const video = AudioUtil.getCurrentlyPlayingVideo();
@@ -34,5 +19,5 @@ class Skip implements Command {
     }
 }
 
-const skip = new Skip();
+const skip = new Skip("skip", "Skips the currently playing song");
 export { skip };

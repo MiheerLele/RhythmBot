@@ -1,5 +1,5 @@
 import { AudioResource } from '@discordjs/voice';
-import { MessageEmbed } from 'discord.js';
+import { EmbedBuilder } from 'discord.js';
 import yts from 'yt-search';
 import { AudioUtil } from './AudioUtil'; 
 import { MessageAction, MessageUtil } from './MessageUtil';
@@ -31,17 +31,17 @@ class Queue {
         return this._store.reduce((sum, resource) => sum + (resource.metadata.seconds * 1000), 0);
     }
 
-    public list(): MessageEmbed[] {
+    public list(): EmbedBuilder[] {
         // Create a copy of the first 10 songs in the queue and reverse it
         const maxEmbedPerMessage = 10;
         const iters = Math.min(maxEmbedPerMessage, this._store.length);
         let songsReverse = this._store.slice(0, iters).reverse();
-        let embeds: MessageEmbed[] = [];
+        let embeds: EmbedBuilder[] = [];
 
         // Loop through and create message embeds for each item
         for (let i = 0; i < iters; i++) {
             const val = songsReverse[i];
-            const embed = new MessageEmbed()
+            const embed = new EmbedBuilder()
                 .setTitle(val.metadata.title)
                 .setThumbnail(val.metadata.thumbnail)
                 .addFields(

@@ -14,8 +14,12 @@ export class AutoPlayUtil {
         artists.forEach((a) => this._artists.add(a.trim()));
     }
 
+    public static listArtists() {
+        return Array.from(this._artists);
+    }
+
     public static removeArtist(artist: string) {
-        this._artists.delete(artist);
+        return this._artists.delete(artist);
     }
 
     public static autoPlay() {

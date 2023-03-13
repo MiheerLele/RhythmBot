@@ -1,4 +1,4 @@
-import { Client, Intents } from "discord.js";
+import { Client, Events, IntentsBitField } from "discord.js";
 import dotenv from 'dotenv';
 import { commands } from './commands/index';
 import { AudioUtil } from "./util/AudioUtil";
@@ -6,14 +6,16 @@ import { MessageUtil } from "./util/MessageUtil";
 
 dotenv.config();
 global.AbortController = require("node-abort-controller").AbortController;
-const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES]});
+const client = new Client({ intents: [IntentsBitField.Flags.Guilds, IntentsBitField.Flags.GuildMessages, IntentsBitField.Flags.GuildVoiceStates]});
 
-client.on("ready", () => {
+client.on(Events.ClientReady, () => {
     console.log("BouqBash DJ is online!");
 })
 
-client.on("interactionCreate", async (interaction) => {
-    if (!interaction.isCommand()) return;
+
+client.on(Events.InteractionCreate, async (interaction) => {
+    // Checks to make sure the interaction is a text based, slash command
+    if (!interaction.isChatInputCommand()) return;
 
     const { commandName } = interaction;
 
@@ -28,11 +30,10 @@ client.on("interactionCreate", async (interaction) => {
     interaction.reply(`No command found, blame ${interaction.user}`)
 })
 
-
-client.on("voiceStateUpdate", (oldState, newState) => {
+client.on(Events.VoiceStateUpdate, (oldState, newState) => {
 
     // if nobody left the channel in question, return.
-    if (oldState.channelId !== oldState.guild.me.voice.channelId || newState.channel)
+    if (oldState.channelId !== oldState.guild.members.me.voice.channelId || newState.channel)
       return;
   
     // Just the bot left in the channel

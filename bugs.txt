@@ -1,8 +1,4 @@
-Sending !play messages too fast results in some songs being lost
-    !play stay
-    !play gnf
-
-Will sometimes eat songs that are queued? Unsure if its related but will stop playing and not throw error message
+Can't run `npm run ...` -> SyntaxError: Unexpected token '??='
 
 AudioPlayerError: Status code: 410
     at ClientRequest.<anonymous> (/Users/miheerlele/Projects/DiscordBot/node_modules/miniget/dist/index.js:210:27)
@@ -18,9 +14,3 @@ AudioPlayerError: Status code: 410
     - HTTP code GONE, resource permanently moved
     - Big Sean - Control Feat Kendrick Lamar & Jay Electronica, Lyrics on Screen
     - https://youtube.com/watch?v=W7zdMeZPkpY
-
-Author parsing bugs
-    '' bug
-    !play old english thug -> Old English" ft. Young Thug, Freddie Gibbs & A$AP Ferg (prod. by Salva & Nick Hook)
-
-    !play ghostface killers -> 21 Savage, Offset & Metro Boomin - "Ghostface Killers" Ft Travis Scott (Official Audio)

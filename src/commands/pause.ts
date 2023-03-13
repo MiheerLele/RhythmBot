@@ -1,32 +1,19 @@
-import { CommandInteraction, MessageEmbed } from "discord.js";
+import { ChatInputCommandInteraction, EmbedBuilder } from "discord.js";
 import { AudioUtil } from "../util/AudioUtil";
-import { Command } from "./interfaces/Command";
-import { SlashCommandDefinition } from "./interfaces/SlashCommand";
+import { Command } from "./structures/Command";
 
-class Pause implements Command {
+class Pause extends Command {
     private isPaused: boolean = false;
-    name: string;
-    description: string;
-    slashCommandDefinition: SlashCommandDefinition;
-    
-    constructor() {
-        this.name = "pause";
-        this.description = "Pauses or unpauses the music"
-        this.slashCommandDefinition = {
-            name: this.name,
-            description: this.description
-        }
-    }
 
-    execute(interaction: CommandInteraction) {
+    execute(interaction: ChatInputCommandInteraction) {
         this.isPaused = !this.isPaused;
         this.isPaused ? AudioUtil.pause() : AudioUtil.unpause();
         const status = this.isPaused ? "PAUSED" : "UNPAUSED";
-        const msgEmbed = new MessageEmbed()
+        const msgEmbed = new EmbedBuilder()
             .setTitle(`BouqBash DJ is now ***${status}***`);
         interaction.reply({ embeds: [msgEmbed] })
     }
 }
 
-const pause = new Pause();
+const pause = new Pause("pause", "Pauses or unpauses the music");
 export { pause };
